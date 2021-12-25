@@ -1,2 +1,2 @@
 # Catan
-Une implémentation en java du jeu de société Java
+Une implémentation en java du jeu de société Catan
