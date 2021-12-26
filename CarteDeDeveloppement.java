@@ -1,4 +1,12 @@
 public class CarteDeDeveloppement extends Carte{
-    private int nbpointVictoire;
+    private final int nbpointVictoire;
+
+    public CarteDeDeveloppement(String st, int n){
+        super(st);
+        nbpointVictoire=n;
+    }
+    public int getNbpointVictoire() {
+        return nbpointVictoire;
+    }
     
 }

@@ -5,14 +5,14 @@ public class Joueur {
     private String name;
     private String type;
     private int nbpoints;
-    private ArrayList<Carte> deck;
+    private ArrayList<ArrayList<Carte>> deck;
     private boolean armeeLaPlusPuissante;
     private boolean routeLaPlusLongue;
     private Scanner scanReponse;
     private char route;//le caractére avec le quelle on va representer ca route
     private char batiments;//le caractére avec le quelle on va répresenter ses batiment;
 
-    public Joueur(ArrayList<Carte> deck){
+    public Joueur(ArrayList<ArrayList<Carte>> deck){
         name="Anonyme";
         this.type="IA";
         this.deck=deck;
@@ -29,7 +29,7 @@ public class Joueur {
     public int getNbpoints() {
         return nbpoints;
     }
-    public ArrayList<Carte> getDeck() {
+    public ArrayList<ArrayList<Carte>> getDeck() {
         return deck;
     }
     public String getName() {
@@ -52,15 +52,9 @@ public class Joueur {
         return scanReponse.nextInt();
     }
     public boolean veutJouer(){
-        if(demanderStr("Voulez vous jouer oui/non").equals("oui")){
-            return true;
-        }else{
-            return false;
-        }
+        return (demanderStr("Voulez vous jouer oui/non").equals("oui"));
     }
     public String demanderNom(){
         return demanderStr("Donnez votre nom");
     }
-
-
 }

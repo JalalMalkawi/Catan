@@ -1,3 +1,10 @@
 public class Carte {
-    private String nom;
+    private final String nom;
+
+    public Carte(String st){
+        nom=st;
+    }
+    public String getNom() {
+        return nom;
+    }
 }

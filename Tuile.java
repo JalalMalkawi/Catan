@@ -6,7 +6,7 @@ public class Tuile {
     private int ordonnee;
     private String nomTerrain;
     private boolean voleurPresent;
-
+    private Carte ressource;
     //CONSTRUCTEUR
     public Tuile(int num, int ab,int ord,String nom,boolean p){
         numero=num;
@@ -44,13 +44,37 @@ public class Tuile {
     public boolean getVoleurPresent(){
         return voleurPresent;
     }
-    public void Affiche(){
+    public void AfficheTuille(){
         String St=nomTerrain+" "+numero;
         while(St.length()<12){
             St+=" ";
         }
         System.out.print(St);
     }
+    public void poseVoleur(){
+        if(voleurPresent){
+            System.out.println("le voleur est déja sur cette tuille");
+        }else{
+            voleurPresent=true;
+        }
+    }
     
-    
+    public Carte getRessourceD() {
+        return ressource;
+    } 
+    public Carte getRessource(){
+        String a="";
+        if(nomTerrain.equalsIgnoreCase("Foret")){
+            a="bois";
+        }else if(nomTerrain.equalsIgnoreCase("Coline")){
+            a="argile";
+        }else if(nomTerrain.equalsIgnoreCase("pres")){
+            a="laine";
+        }else if(nomTerrain.equalsIgnoreCase("Champs")){
+            a="ble";
+        }else if(nomTerrain.equalsIgnoreCase("montagnes")){
+            a="minerai";
+        }
+        return new Carte(a);
+    }    
 }

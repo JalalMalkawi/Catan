@@ -36,11 +36,11 @@ public class Plateau {
     //Affichage général
     public void afficheTabR(){
         System.out.println("          ****************************\n          *   Le rayaume de Catane   *\n          ****************************");
-        for(int i=0;i<routes.length;i++){
+        for(int i=0;i<routesV.length;i++){
             if(i%2==0){
              System.out.print('©');
             }
-            for(int j=0;j<routes[i].length;j++){
+            for(int j=0;j<route[i].length;j++){
                
                if(i%2==0){
                    afficheRouteH('-');
@@ -59,14 +59,14 @@ public class Plateau {
         System.out.println("          ****************************\n          *   Le rayaume de Catane   *\n          ****************************");
     }
     //Ajouter une Route
-    public void ajouteRoute(Route r){
-        if(!routePresent(r)){
-            routes[r.getAbscisse()][r.getOrdonnee()]=r;
-        }else{
-            System.out.println("Route déja construis");
-        }
+    // public void ajouteRoute(Route r){
+    //     if(!routePresent(r)){
+    //         routes[r.getAbscisse()][r.getOrdonnee()]=r;
+    //     }else{
+    //         System.out.println("Route déja construis");
+    //     }
 
-    }
+    // }
     //Ajoute batiment permet d'ajoute Colonie et de Gagné
     public void ajouteColonie(){
 
@@ -86,7 +86,7 @@ public class Plateau {
     }
     //Route déja ajouté
     public boolean routePresent(Route r){
-        return (routes[r.getAbscisse()][r.getOrdonnee()]!=null);
+        return (routesV[r.getAbscisse()][r.getOrdonnee()]!=null|| routesH[r.getAbscisse()][r.getOrdonnee()]!=null);
        
     }
     // public boolean ColoniePresent(){
@@ -95,5 +95,25 @@ public class Plateau {
     // public boolean VillePresent(){
 
     // }
+    public void ChoisitTerrain(){
+    
+    }
+    public void choisitNumero(){
+
+    }
+    public int nbreDepresenceNum(int n){
+        int x=0;
+        for(int i=0;i<plateau.length;i++){
+            for(int j=0;j<plateau[i].length;j++){
+                if(plateau[i][j].getNumero()==n){
+                    x++;
+                }
+            }
+        }
+        return x;
+    }
+    public boolean peutOnajouterTuile(int n){
+        return false;
+    }
     
 }
