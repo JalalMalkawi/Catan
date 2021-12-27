@@ -10,8 +10,8 @@ public class Joueur {
     private boolean routeLaPlusLongue;
     private Scanner scanReponse;
     private char route;//le caractére avec le quelle on va representer ca route
-    private char batiments;//le caractére avec le quelle on va répresenter ses batiment;
-
+    private char villes;//le caractére avec le quelle on va répresenter ses batiment;
+    private char colonie;
     public Joueur(ArrayList<ArrayList<Carte>> deck){
         name="Anonyme";
         this.type="IA";
@@ -19,13 +19,23 @@ public class Joueur {
         armeeLaPlusPuissante=false;
         routeLaPlusLongue=false;
         scanReponse=new Scanner(System.in);
+        route=' ';
+        colonie=' ';
+        villes=' ';
     }
     public char getRoute() {
        return route;
     }
-    public char getBatiments() {
-       return batiments;
+    public char getColonie() {
+        return colonie;
     }
+    public char getVilles() {
+        return villes;
+    }
+    public String getType() {
+        return type;
+    }
+
     public int getNbpoints() {
         return nbpoints;
     }

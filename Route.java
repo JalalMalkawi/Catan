@@ -32,5 +32,5 @@ public class Route {
     public void afficheRouteV(){
         System.out.print(joueur.getRoute());
     }
-    
+   
 }

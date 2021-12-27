@@ -6,14 +6,12 @@ public class Tuile {
     private int ordonnee;
     private String nomTerrain;
     private boolean voleurPresent;
-    private Carte ressource;
     //CONSTRUCTEUR
     public Tuile(int num, int ab,int ord,String nom,boolean p){
         numero=num;
         abscisse=ab;
         ordonnee=ord;
         nomTerrain=nom;
-        voleurPresent=p;
     }
     public void setAbscisse(int abscisse) {
         this.abscisse = abscisse;
@@ -58,10 +56,6 @@ public class Tuile {
             voleurPresent=true;
         }
     }
-    
-    public Carte getRessourceD() {
-        return ressource;
-    } 
     public Carte getRessource(){
         String a="";
         if(nomTerrain.equalsIgnoreCase("Foret")){
