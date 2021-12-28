@@ -1,3 +1,4 @@
+
 public class Plateau {
     private int dimension;//dimension du plateau
     private Tuile[][] tuiles;
@@ -14,16 +15,26 @@ public class Plateau {
         routesV=new Route[dimension+2][dimension +1]; // une ligne de routes verticales en plus pour les méthodes de "vérification" comme peutConstruire()
         routesH=new Route[dimension+1][dimension+2]; // deux routes horizontales de plus aux extrémités des lignes pour la même raison qu'au dessus
         joueur=new Joueur[nbrjoueur];
-       
     }
+
+    public void initialiseTab(Object[][]  tab){
+        for (int i = 0; i < tab.length; i++) {
+            for (int j = 0; j < tab.length; j++) {
+                tab[i][j] = new Object();
+            }
+        }
+    }
+
     public void afficheRouteH( char c){
         for(int i=0;i<10;i++){
             System.out.print(c);
         }  
     }
+
     public void afficheRouteV(char c){
         System.out.print(c);
     }
+
     public void affichestring(String st){
         System.out.print(st);
     }
@@ -37,21 +48,23 @@ public class Plateau {
     public void afficheTabR(){
         int tabLength = routesV.length + routesH.length;
         int subTabLength = routesV[0].length;
-        int tuilesIdx = -1;
+        int lineIdx = -1;
+
+
         System.out.println("          ****************************\n          *     L'île de Catane      *\n          ****************************");
         
         for(int i=1;i<tabLength - 1;i++){
             if(i%2==1){
-             System.out.print('©');
-             tuilesIdx++;
+                lineIdx++;
+                System.out.print("@");
             }
             for(int j=1;j<subTabLength;j++){
                if(i%2==1){
                 afficheRouteH('-');
-                System.out.print('©');
+                System.out.print("@");
                }else{
                     System.out.print('|');
-                    System.out.print(tuiles[tuilesIdx][j-1]+"      ");
+                    System.out.print("   "+tuiles[lineIdx][j-1]+"   ");
                     if(j == subTabLength -1 ) System.out.print("|");
                }
                

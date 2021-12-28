@@ -9,6 +9,10 @@ public class Route {
         abscisse=x;
         ordonnee=y;
     }
+
+    public Route(int i,int j){
+        this(null,i,j);
+    }
   
    
     public void affichestring(String st){
