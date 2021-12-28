@@ -1,4 +1,7 @@
 
+import java.util.Random;
+
+
 public class Plateau {
     private int dimension;//dimension du plateau
     private Tuile[][] tuiles;
@@ -69,7 +72,7 @@ public class Plateau {
                }
                
             }
-            System.out.println();
+             System.out.println();
         }
     }
     //Affichage courante
@@ -97,6 +100,7 @@ public class Plateau {
     public boolean jeuGagne(){
         for(int i=0;i<joueur.length;i++){
             if(joueur[i].getNbpoints()==10){
+                System.out.println(joueur[i].getName()+" a gagné");
                 return true;
             }
         }
@@ -107,18 +111,12 @@ public class Plateau {
         return (routesV[r.getAbscisse()][r.getOrdonnee()]!=null|| routesH[r.getAbscisse()][r.getOrdonnee()]!=null);
        
     }
-    // public boolean ColoniePresent(){
-
+    // public boolean ColoniePresent(Colonie c){
+    
     // }
     // public boolean VillePresent(){
-
-    // }
-    public void ChoisitTerrain(){
     
-    }
-    public void choisitNumero(){
-
-    }
+    // }
     public int nbreDepresenceNum(int n){
         int x=0;
         for(int i=0;i<tuiles.length;i++){
@@ -130,8 +128,45 @@ public class Plateau {
         }
         return x;
     }
-    public boolean peutOnajouterTuile(int n){
-        return false;
+    public int choisitNumero(){
+        int n=0;
+        Random r = new Random(); 
+        int i=r.nextInt(12);
+        if(i<4 && nbreDepresenceNum(i)<2){
+            n=i+2;
+        }else if(i==4 || i==5 && nbreDepresenceNum(6)<2){
+            n=6;
+        }else if(i==6  || i==7 && nbreDepresenceNum(8)<2){
+            n=8;
+        }else{
+            n=i+1;
+        }
+        return n;
     }
+    public int nbreDepresenceTerain(String nom){
+        int x=0;
+        for(int i=0;i<tuiles.length;i++){
+            for(int j=0;j<tuiles[i].length;j++){
+                if(tuiles[i][j].getNomTerrain().equalsIgnoreCase(nom)){
+                    x++;
+                }
+            }
+        }
+        return x;
+    }
+    public String ChoisitTerrain(){
+        String []ter={"Foret,Collinen","Pres","Champs","Montagne","Desert"};
+        double x=(tuiles.length-1)*(tuiles[0].length-1)/5;
+        String n="";
+        Random r = new Random(); 
+        int i=r.nextInt(6);
+        if(i==5 && nbreDepresenceTerain("Desert")<1){
+            n=ter[5];
+        }else if(nbreDepresenceTerain(ter[i])<x){
+            n=ter[i];
+        }
+        return n;
+    }
+
     
 }
