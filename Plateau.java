@@ -1,3 +1,7 @@
+import java.util.Random;
+
+import javax.swing.text.TabExpander;
+
 public class Plateau {
     private int hauteur,largeur;//dimension du plateau
     private Tuile[][] plateau;
@@ -34,26 +38,26 @@ public class Plateau {
     
     
     //Affichage général
-    public void afficheTabR(){
-        System.out.println("          ****************************\n          *   Le rayaume de Catane   *\n          ****************************");
-        for(int i=0;i<routesV.length;i++){
-            if(i%2==0){
-             System.out.print('©');
-            }
-            for(int j=0;j<route[i].length;j++){
+    // public void afficheTabR(){
+    //     System.out.println("          ****************************\n          *   Le rayaume de Catane   *\n          ****************************");
+    //     for(int i=0;i<routesV.length;i++){
+    //         if(i%2==0){
+    //          System.out.print('©');
+    //         }
+    //         for(int j=0;j<route[i].length;j++){
                
-               if(i%2==0){
-                   afficheRouteH('-');
-                   System.out.print('©');
-               }else{
-                   afficheRouteV('|');
-                  System.out.print("Terrain   ");
-               }
+    //            if(i%2==0){
+    //                afficheRouteH('-');
+    //                System.out.print('©');
+    //            }else{
+    //                afficheRouteV('|');
+    //               System.out.print("Terrain   ");
+    //            }
                
-            }
-            System.out.println();
-        }
-    }
+    //         }
+    //         System.out.println();
+    //     }
+    // }
     //Affichage courante
     public void AfficheCourant(){
         System.out.println("          ****************************\n          *   Le rayaume de Catane   *\n          ****************************");
@@ -79,6 +83,7 @@ public class Plateau {
     public boolean jeuGagne(){
         for(int i=0;i<joueur.length;i++){
             if(joueur[i].getNbpoints()==10){
+                System.out.println(joueur[i].getName()+" a gagné");
                 return true;
             }
         }
@@ -89,18 +94,12 @@ public class Plateau {
         return (routesV[r.getAbscisse()][r.getOrdonnee()]!=null|| routesH[r.getAbscisse()][r.getOrdonnee()]!=null);
        
     }
-    // public boolean ColoniePresent(){
-
+    // public boolean ColoniePresent(Colonie c){
+    
     // }
     // public boolean VillePresent(){
-
-    // }
-    public void ChoisitTerrain(){
     
-    }
-    public void choisitNumero(){
-
-    }
+    // }
     public int nbreDepresenceNum(int n){
         int x=0;
         for(int i=0;i<plateau.length;i++){
@@ -112,8 +111,45 @@ public class Plateau {
         }
         return x;
     }
-    public boolean peutOnajouterTuile(int n){
-        return false;
+    public int choisitNumero(){
+        int n=0;
+        Random r = new Random(); 
+        int i=r.nextInt(12);
+        if(i<4 && nbreDepresenceNum(i)<2){
+            n=i+2;
+        }else if(i==4 || i==5 && nbreDepresenceNum(6)<2){
+            n=6;
+        }else if(i==6  || i==7 && nbreDepresenceNum(8)<2){
+             n=8;
+        }else{
+             n=i+1;
+        }
+        return n;
     }
+    public int nbreDepresenceTerain(String nom){
+        int x=0;
+        for(int i=0;i<plateau.length;i++){
+            for(int j=0;j<plateau[i].length;j++){
+                if(plateau[i][j].getNomTerrain().equalsIgnoreCase(nom)){
+                    x++;
+                }
+            }
+        }
+        return x;
+    }
+    public String ChoisitTerrain(){
+        String []ter={"Foret,Collinen","Pres","Champs","Montagne","Desert"};
+        double x=(plateau.length-1)*(plateau[0].length-1)/5;
+        String n="";
+        Random r = new Random(); 
+        int i=r.nextInt(6);
+        if(i==5 && nbreDepresenceTerain("Desert")<1){
+            n=ter[5];
+        }else if(nbreDepresenceTerain(ter[i])<x){
+            n=ter[i];
+        }
+        return n;
+    }
+
     
 }

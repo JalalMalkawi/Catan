@@ -19,7 +19,7 @@ public class Lanceur {
         joueur.finish();
         System.exit(0);*/
         Plateau p=new Plateau(4, 4,2);
-        p.afficheTabR();
+            
     }
 
 
