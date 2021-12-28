@@ -1,18 +1,18 @@
 public class Plateau {
-    private int hauteur,largeur;//dimension du plateau
-    private Tuile[][] plateau;
-    private Route[][] routesV; 
-    private Route[][] routesH; 
+    private int dimension;//dimension du plateau
+    private Tuile[][] tuiles;
+    private Route[][] routesV; //routes Verticales
+    private Route[][] routesH; // routes Horizontales
     private Batiment[][] batiments; // les colonies et les villes
     private  Joueur []joueur;
     
     //constructeur
-    public Plateau(int ha,int lar,int nbrjoueur){
-        hauteur=ha;
-        largeur=lar;
-        plateau=new Tuile[hauteur+2][largeur+2];
-        batiments=new Batiment[ha+1][lar+1];
-        routesV=new Route[lar+ha+1][lar+1];
+    public Plateau(int dim,int nbrjoueur){
+        dimension = dim;
+        tuiles=new Tuile[dimension][dimension];
+        batiments=new Batiment[dimension+1][dimension+1];
+        routesV=new Route[dimension+2][dimension +1]; // une ligne de routes verticales en plus pour les méthodes de "vérification" comme peutConstruire()
+        routesH=new Route[dimension+1][dimension+2]; // deux routes horizontales de plus aux extrémités des lignes pour la même raison qu'au dessus
         joueur=new Joueur[nbrjoueur];
        
     }
@@ -35,19 +35,24 @@ public class Plateau {
     
     //Affichage général
     public void afficheTabR(){
-        System.out.println("          ****************************\n          *   Le rayaume de Catane   *\n          ****************************");
-        for(int i=0;i<routesV.length;i++){
-            if(i%2==0){
+        int tabLength = routesV.length + routesH.length;
+        int subTabLength = routesV[0].length;
+        int tuilesIdx = -1;
+        System.out.println("          ****************************\n          *     L'île de Catane      *\n          ****************************");
+        
+        for(int i=1;i<tabLength - 1;i++){
+            if(i%2==1){
              System.out.print('©');
+             tuilesIdx++;
             }
-            for(int j=0;j<route[i].length;j++){
-               
-               if(i%2==0){
-                   afficheRouteH('-');
-                   System.out.print('©');
+            for(int j=1;j<subTabLength;j++){
+               if(i%2==1){
+                afficheRouteH('-');
+                System.out.print('©');
                }else{
-                   afficheRouteV('|');
-                  System.out.print("Terrain   ");
+                    System.out.print('|');
+                    System.out.print(tuiles[tuilesIdx][j-1]+"      ");
+                    if(j == subTabLength -1 ) System.out.print("|");
                }
                
             }
@@ -103,9 +108,9 @@ public class Plateau {
     }
     public int nbreDepresenceNum(int n){
         int x=0;
-        for(int i=0;i<plateau.length;i++){
-            for(int j=0;j<plateau[i].length;j++){
-                if(plateau[i][j].getNumero()==n){
+        for(int i=0;i<tuiles.length;i++){
+            for(int j=0;j<tuiles[i].length;j++){
+                if(tuiles[i][j].getNumero()==n){
                     x++;
                 }
             }

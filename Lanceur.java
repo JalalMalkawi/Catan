@@ -18,7 +18,7 @@ public class Lanceur {
         System.out.printf("%s,Votre partie est terminée : vous avez au compteur %d victoire(s) et %d défaite(s)",joueur.getNom(),joueur.getWins(),joueur.getLoss());
         joueur.finish();
         System.exit(0);*/
-        Plateau p=new Plateau(4, 4,2);
+        Plateau p=new Plateau(4,2);
         p.afficheTabR();
     }
 
