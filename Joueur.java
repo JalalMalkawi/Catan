@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
 public class Joueur {
     private String name;
     private String type;
@@ -10,26 +11,26 @@ public class Joueur {
     private boolean routeLaPlusLongue;
     private Scanner scanReponse;
     private char route;//le caractére avec le quelle on va representer ca route
-    private char villes;//le caractére avec le quelle on va répresenter ses batiment;
-    private char colonie;
-    public Joueur(ArrayList<ArrayList<Carte>> deck){
+    private String villes;//le caractére avec le quelle on va répresenter ses batiment;
+    private String colonie;
+    
+    public Joueur(){
         name="Anonyme";
         this.type="IA";
-        this.deck=deck;
         armeeLaPlusPuissante=false;
         routeLaPlusLongue=false;
         scanReponse=new Scanner(System.in);
-        route=' ';
-        colonie=' ';
-        villes=' ';
+        route='-';
+        colonie="()";
+        villes="[]";
     }
     public char getRoute() {
        return route;
     }
-    public char getColonie() {
+    public String getColonie() {
         return colonie;
     }
-    public char getVilles() {
+    public String getVilles() {
         return villes;
     }
     public String getType() {
@@ -44,7 +45,8 @@ public class Joueur {
     }
     public String getName() {
         return name;
-    }public Scanner getScanReponse() {
+    }
+    public Scanner getScanReponse() {
         return scanReponse;
     }
     public void setNom(String nom){

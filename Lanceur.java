@@ -20,7 +20,7 @@ public class Lanceur {
         System.exit(0);*/
         
             
-        Plateau p=new Plateau(4,2);
+        Plateau p=new Plateau(5,2);
         p.afficheTabR();
     }
 
