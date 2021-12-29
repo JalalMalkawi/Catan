@@ -1,25 +1,24 @@
 public class Route {
-    private Joueur joueur;
-     private int abscisse;
-     private int ordonnee;
+    private Joueur proprietaire;
+    private int abscisse;
+    private int ordonnee;
 
 
     public Route(Joueur j,int x, int y){
-        joueur=j;
+        proprietaire=j;
         abscisse=x;
         ordonnee=y;
     }
     public Route(int i,int j){
         this(null,i,j);
     }
-    public void affichestring(String st){
-        System.out.print(st);
-    }
+
     public int getAbscisse() {
         return abscisse;
     }
-    public Joueur getJoueur() {
-        return joueur;
+
+    public Joueur getProprietaire() {
+        return proprietaire;
     }
     public int getOrdonnee() {
         return ordonnee;
@@ -27,11 +26,11 @@ public class Route {
     //Afficher une route horizontalement
     public void afficheRouteH(){
         for(int i=0;i<12;i++){
-            System.out.print(joueur.getRoute());
+            System.out.print(proprietaire.getRoute());
         }   
     }
     public void afficheRouteV(){
-        System.out.print(joueur.getRoute());
+        System.out.print(proprietaire.getRoute());
     }
    
 }
