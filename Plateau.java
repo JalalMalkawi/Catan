@@ -9,6 +9,7 @@ public class Plateau {
     private Route[][] routesH; // routes Horizontales
     private Batiment[][] batiments; // les colonies et les villes
     private  Joueur []joueur;
+    String alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     
     //constructeur
     public Plateau(int dim,int nbrjoueur){
@@ -27,13 +28,11 @@ public class Plateau {
             }
         }
     }
-
     public void afficheRouteH( char c){
         for(int i=0;i<10;i++){
             System.out.print(c);
         }  
     }
-
     public void afficheRouteV(char c){
         System.out.print(c);
     }
@@ -45,7 +44,6 @@ public class Plateau {
     public void affichestr(){
         System.out.print("Terrain i");
     }
-    
     
     //Affichage général
     public void afficheTabR(){
@@ -169,6 +167,5 @@ public class Plateau {
         }
         return n;
     }
-
     
 }

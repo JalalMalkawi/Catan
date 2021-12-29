@@ -24,17 +24,13 @@ public class Lanceur {
             
         Plateau p=new Plateau(4,2);
         p.afficheTabR();
-        int n=10;
-        String []ter={"Foret,Colline","Pres","Champs","Montagne","Desert"};
-        System.out.println(ter.length);
-       
-        
-        while(n!=0){
-           
-            System.out.print(p.ChoisitTerrain()+" ");
-            n--;
+        String alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        for(int i=0;i<alphabet.length();i++){
+            if(i%2==0){
+                System.out.print(alphabet.charAt(i));
+            }
         }
-        
+        System.out.println();
     }
 
 

@@ -3,6 +3,9 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Joueur {
+    String alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    String alphabetI="-ACEGIKMOQSUWY";
+    String alphabetp="-BDFHJLNPRTVXZ";
     private String name;
     private String type;
     private int nbpoints;
@@ -92,9 +95,46 @@ public class Joueur {
         System.out.println("(f) faire un échange");
         return scanReponse.next().charAt(0);
     }
-
-
-    
-    
+    // public int[] getDimension(String str){
+    //     String hauteur="";
+    //     String largeur="";
+    //     int[] dim = new int[2];
+    //     for (int i = 0; i < str.indexOf("x"); i++) {
+    //         if(Character.isDigit(str.charAt(i))){
+    //             hauteur+=str.charAt(i);
+    //         }
+    //     }
+    //     int midindex = str.toLowerCase().indexOf("x"); // On repère l'index du "x" dans la réponse de l'utilisateur de la forme largeurXhauteur
+    //     for (int i = midindex+1; i < str.length(); i++) {
+    //             largeur+=str.charAt(i);
+    //         }
+    //     dim[0] = Integer.parseInt(hauteur);
+    //     dim[1] = Integer.parseInt(largeur);
+    //     return dim;
+    // }
+    // //demade lescoordonné ou placer une ville ou une colonie
+    // public int[] demanderCordoneBatiment() {
+    //     return getDimension(demanderStr("Saisir les coordonnées (abscice X ordordoné)"));
+    // }
+    public int[] demanderCoordonnes() {
+        String coordonnees = demanderStr("Saisir les coordonnées d'une case (Ligne.Colonne)");
+        int[] coord = new int[2];
+        coord[0] = alphabet.indexOf(coordonnees.charAt(0)); 
+        coord[1] = Integer.parseInt( String.valueOf(coordonnees.charAt(1)));
+        return coord;
+    }
+    public String demanderCordonerRoute(){
+        return  demanderStr("Saisir les coordonnées d'une case (Ligne.Colonne)");
+    }
+    public int [] demanderCordonneRoute(String coordonnees){
+        int[] coord = new int[2];
+        if(alphabet.indexOf(coordonnees.charAt(0))%2==0){
+            coord[0] = alphabetp.indexOf(coordonnees.charAt(0)); 
+        }else{
+            coord[0] = alphabetI.indexOf(coordonnees.charAt(0)); 
+        }
+        coord[1] = Integer.parseInt( String.valueOf(coordonnees.charAt(1)));
+        return coord;
+    }
 
 }
