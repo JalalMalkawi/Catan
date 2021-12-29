@@ -172,11 +172,13 @@ public class Plateau {
         return n;
     }
 
-    public int nbreDepresenceTerain(String nom) {
-        int x = 0;
-        for (int i = 0; i < tuiles.length; i++) {
-            for (int j = 0; j < tuiles[i].length; j++) {
-                if (tuiles[i][j].getNomTerrain().equalsIgnoreCase(nom)) {
+    //cette fonction renvoi le nombre de fois qu'un terrain est present dur le plateau
+    public int nbreDepresenceTerain(String nom){
+        int x=0;
+        for(int i=0;i<tuiles.length;i++){
+            for(int j=0;j<tuiles[i].length;j++){
+                if(tuiles[i][j].getNomTerrain().equalsIgnoreCase(nom)){
+
                     x++;
                 }
             }
@@ -184,16 +186,17 @@ public class Plateau {
         return x;
     }
 
-    public String ChoisitTerrain() {
-        String[] ter = { "Foret,Collinen", "Pres", "Champs", "Montagne", "Desert" };
-        double x = (tuiles.length - 1) * (tuiles[0].length - 1) / 5;
-        String n = "";
-        Random r = new Random();
-        int i = r.nextInt(6);
-        if (i == 5 && nbreDepresenceTerain("Desert") < 1) {
-            n = ter[5];
-        } else if (nbreDepresenceTerain(ter[i]) < x) {
-            n = ter[i];
+    //cette methode permet de choisir un terreain p
+    public String ChoisitTerrain(){
+        String []ter={"Foret","Colline","Pres","Champs","Montagne","Desert"};
+        double x=((dimension*dimension)-1)/5; //Nombre d'apparation des terrain excepté le dessert
+        String n="";
+        Random r = new Random(); 
+        int i=r.nextInt(6);
+        if(i==5 && nbreDepresenceTerain("Desert")<1){
+            n=ter[5];
+        }else if(nbreDepresenceTerain(ter[i])<x){
+            n=ter[i];
         }
         return n;
     }
