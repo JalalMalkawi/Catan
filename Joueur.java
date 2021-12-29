@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Joueur {
@@ -12,6 +13,7 @@ public class Joueur {
     private char route;//le caractére avec le quelle on va representer ca route
     private char villes;//le caractére avec le quelle on va répresenter ses batiment;
     private char colonie;
+
     public Joueur(ArrayList<ArrayList<Carte>> deck){
         name="Anonyme";
         this.type="IA";
@@ -55,16 +57,44 @@ public class Joueur {
     }
     private String demanderStr(String q){
         System.out.println(q);
-        return System.console().readLine();
+        return scanReponse.next();
     }
     private int demanderInt(String q){
         System.out.println(q);
         return scanReponse.nextInt();
     }
+    private char demaderChar(String q){
+        System.out.println(q);
+        return scanReponse.next().charAt(0);
+    }
     public boolean veutJouer(){
-        return (demanderStr("Voulez vous jouer oui/non").equals("oui"));
+        return (demanderStr("Voulez vous jouer oui/non").equalsIgnoreCase("oui"));
     }
     public String demanderNom(){
         return demanderStr("Donnez votre nom");
     }
+    public int demanderDim(){
+        return demanderInt("Donner la dimension du plateau");
+    }
+    public int LancerDe(){
+        Random r = new Random(); 
+        int i=r.nextInt(6)+1;
+        int j=r.nextInt(6)+1;
+        return i+j;
+    }
+    public char demanderAction(){
+        System.out.println("Veiller saisir le caractére correspondant a l'action que vous voulez effectuer");
+        System.out.println("(a) Lancer les dés");
+        System.out.println("(b) Construire une route");
+        System.out.println("(c) Construire une ville");
+        System.out.println("(d) Construire une Colonie");
+        System.out.println("(e) jouer une carte Chevalier");
+        System.out.println("(f) faire un échange");
+        return scanReponse.next().charAt(0);
+    }
+
+
+    
+    
+
 }

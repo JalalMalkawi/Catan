@@ -143,6 +143,7 @@ public class Plateau {
         }
         return n;
     }
+    //cette fonction renvoi le nombre de fois qu'un terrain est present dur le plateau
     public int nbreDepresenceTerain(String nom){
         int x=0;
         for(int i=0;i<tuiles.length;i++){
@@ -154,9 +155,10 @@ public class Plateau {
         }
         return x;
     }
+    //cette methode permet de choisir un terreain p
     public String ChoisitTerrain(){
-        String []ter={"Foret,Collinen","Pres","Champs","Montagne","Desert"};
-        double x=(tuiles.length-1)*(tuiles[0].length-1)/5;
+        String []ter={"Foret","Colline","Pres","Champs","Montagne","Desert"};
+        double x=((dimension*dimension)-1)/5; //Nombre d'apparation des terrain excepté le dessert
         String n="";
         Random r = new Random(); 
         int i=r.nextInt(6);

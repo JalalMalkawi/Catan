@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class Lanceur {
     public static void main(String[] args) {
         /*Plateau plato;
@@ -22,6 +24,17 @@ public class Lanceur {
             
         Plateau p=new Plateau(4,2);
         p.afficheTabR();
+        int n=10;
+        String []ter={"Foret,Colline","Pres","Champs","Montagne","Desert"};
+        System.out.println(ter.length);
+       
+        
+        while(n!=0){
+           
+            System.out.print(p.ChoisitTerrain()+" ");
+            n--;
+        }
+        
     }
 
 
