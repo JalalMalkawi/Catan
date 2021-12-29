@@ -178,7 +178,6 @@ public class Plateau {
         for(int i=0;i<tuiles.length;i++){
             for(int j=0;j<tuiles[i].length;j++){
                 if(tuiles[i][j].getNomTerrain().equalsIgnoreCase(nom)){
-
                     x++;
                 }
             }
@@ -201,4 +200,5 @@ public class Plateau {
         return n;
     }
 
+    
 }

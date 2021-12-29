@@ -12,17 +12,10 @@ public class Joueur {
     private boolean routeLaPlusLongue;
     private Scanner scanReponse;
     private char route;//le caractére avec le quelle on va representer ca route
-<<<<<<< HEAD
     private String villes;//le caractére avec le quelle on va répresenter ses batiment;
     private String colonie;
     
     public Joueur(){
-=======
-    private char villes;//le caractére avec le quelle on va répresenter ses batiment;
-    private char colonie;
-
-    public Joueur(ArrayList<ArrayList<Carte>> deck){
->>>>>>> 34b015cac21940a71c79103ab1b791d60778fd08
         name="Anonyme";
         this.type="IA";
         armeeLaPlusPuissante=false;
