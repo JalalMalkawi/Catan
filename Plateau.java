@@ -7,13 +7,10 @@ public class Plateau {
     private Route[][] routesV; // routes Verticales
     private Route[][] routesH; // routes Horizontales
     private Batiment[][] batiments; // les colonies et les villes
-    String alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    
-    //constructeur
-    
+    String alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ";    
     private Joueur[] joueurs; //TODO: changer en Set plus tard : on ne veut pas avoir deux joueurs identiques (ayant le même nom)
-
     // constructeur
+ 
     public Plateau(int dim, int nbrjoueur) {
         dimension = dim;
         tuiles = new Tuile[dimension + 2][dimension + 2];
@@ -141,10 +138,7 @@ public class Plateau {
 
     public boolean ColoniePresente(Colonie c){
         return false;
-    }
-
-
-        
+    }       
     public boolean VillePresente(){
         return false;
     }
@@ -204,5 +198,26 @@ public class Plateau {
         }
         return n;
     }
+    public void getRoussource(int x){
+        for(int i=1;i<tuiles.length-1;i++){
+            for(int j=1;j<tuiles[0].length-1;j++){
+                if(tuiles[i][j].getNumero()==x){ //Verifier si la tuille porte le numéro donner en argument;
+                    int a=tuiles[i][j].getAbscisse();
+                   int  b=tuiles[i][j].getOrdonnee();
+                    for(int k=a-1;k<=a;k++){   //Vérifier que les batiment qui encadre la tuille sont occupé par des colonie ou des villes
+                        for(int l=b-1;l<=b;l++){
+                            if(batiments[k][l]!=null){
+                                batiments[k][l].getProprietaire().ajouteCarteRessoure(tuiles[a][b].getRessource());// une colonie gagne une seule carte 
+                                if(batiments[k][l] instanceof Ville){
+                                    batiments[k][l].getProprietaire().ajouteCarteRessoure(tuiles[a][b].getRessource());//une ville gagne une deuxième carte
+                                }
+                            }  
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     
 }

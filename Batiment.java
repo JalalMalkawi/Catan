@@ -14,7 +14,12 @@ public class Batiment {
     public String toString() {
         return "()";
     }
-
+    public Joueur getProprietaire() {
+        return proprietaire;
+    }
+    public void setProprietaire(Joueur proprietaire) {
+        this.proprietaire = proprietaire;
+    }
 
      
     
