@@ -15,9 +15,6 @@ public class Batiment {
         return "O";
     }
 
-    public Joueur getProprietaire() {
-        return proprietaire;
-    }
 
     public int getAbscisse() {
         return abscisse;
@@ -39,9 +36,6 @@ public class Batiment {
         this.ordonnee = ordonnee;
     }
 
-    public void setProprietaire(Joueur proprietaire) {
-        this.proprietaire = proprietaire;
-    }
 
     public void setPtsDeVictoire(int ptsDeVictoire) {
         this.ptsDeVictoire = ptsDeVictoire;
@@ -50,7 +44,12 @@ public class Batiment {
     public boolean checkIfBatimentAmi(Joueur j,Batiment b){
         return j.equals(b.getProprietaire()) || b.getProprietaire() == null;
     }
-
+    public Joueur getProprietaire() {
+        return proprietaire;
+    }
+    public void setProprietaire(Joueur proprietaire) {
+        this.proprietaire = proprietaire;
+    }
 
      
     
