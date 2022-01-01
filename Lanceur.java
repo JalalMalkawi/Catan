@@ -22,15 +22,15 @@ public class Lanceur {
         System.exit(0);*/
         
             
-        Plateau p=new Plateau(5,2);
+        Plateau p=new Plateau(4,2);
         p.afficheTabR();
-        String alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        /*String alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         for(int i=0;i<alphabet.length();i++){
             if(i%2==0){
                 System.out.print(alphabet.charAt(i));
             }
         }
-        System.out.println();
+        System.out.println();*/
     }
 
 

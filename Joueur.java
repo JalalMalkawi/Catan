@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Joueur {
     String alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     String alphabetI="-ACEGIKMOQSUWY";
-    String alphabetp="-BDFHJLNPRTVXZ";
+    String alphabetP="-BDFHJLNPRTVXZ";
     private String name;
     private String type;
     private int nbpoints;
@@ -27,6 +27,7 @@ public class Joueur {
         route='-';
         colonie="()";
         villes="[]";
+        deck = new ArrayList<>();
     }
     public char getRoute() {
        return route;
@@ -87,8 +88,8 @@ public class Joueur {
         return i+j;
     }
     public char demanderAction(){
-        System.out.println("Veiller saisir le caractére correspondant a l'action que vous voulez effectuer");
-        System.out.println("(a) Lancer les dés");
+        System.out.println("Veuillez saisir le caractère correspondant à l'action que vous voulez effectuer");
+        System.out.println("(a) Lancer les dès");
         System.out.println("(b) Construire une route");
         System.out.println("(c) Construire une ville");
         System.out.println("(d) Construire une Colonie");
@@ -115,7 +116,7 @@ public class Joueur {
     // }
     // //demade lescoordonné ou placer une ville ou une colonie
     // public int[] demanderCordoneBatiment() {
-    //     return getDimension(demanderStr("Saisir les coordonnées (abscice X ordordoné)"));
+    //     return getDimension(demanderStr("Saisir les coordonnées (abscisseXordonnée)"));
     // }
     public int[] demanderCoordonnes() {
         String coordonnees = demanderStr("Saisir les coordonnées d'une case (Ligne.Colonne)");
@@ -130,7 +131,7 @@ public class Joueur {
     public int [] demanderCordonneRoute(String coordonnees){
         int[] coord = new int[2];
         if(alphabet.indexOf(coordonnees.charAt(0))%2==0){
-            coord[0] = alphabetp.indexOf(coordonnees.charAt(0)); 
+            coord[0] = alphabetP.indexOf(coordonnees.charAt(0)); 
         }else{
             coord[0] = alphabetI.indexOf(coordonnees.charAt(0)); 
         }

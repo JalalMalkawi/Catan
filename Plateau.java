@@ -8,12 +8,9 @@ public class Plateau {
     private Route[][] routesH; // routes Horizontales
     private Batiment[][] batiments; // les colonies et les villes
     String alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    
-    //constructeur
-    
-    private Joueur[] joueurs; //TODO: changer en Set plus tard : on ne veut pas avoir deux joueurs identiques (ayant le même nom)
+    private Joueur[] joueurs; // TODO: Trouver une solution pour ne pas avoir deux joueurs identiques (ayant le même nom), exemple : utiliser un Set
 
-    // constructeur
+    //--------------- constructeur et fonctions auxiliaires du constructeur, affichage----------------------//
     public Plateau(int dim, int nbrjoueur) {
         dimension = dim;
         tuiles = new Tuile[dimension + 2][dimension + 2];
@@ -45,18 +42,17 @@ public class Plateau {
         }
     }
 
-    public void initialiseJoueur(Joueur[] j){
+    public void initialiseJoueur(Joueur[] j) {
         for (int i = 0; i < j.length; i++) {
             j[i] = new Joueur();
         }
     }
 
     public void afficheRouteH(char c) {
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 12; i++) {
             System.out.print(c);
         }
     }
-
 
     public void afficheTabR() {
         int tabLength = routesV.length + routesH.length;
@@ -73,39 +69,34 @@ public class Plateau {
             }
             for (int j = 1; j < subTabLength; j++) {
                 if (i % 2 == 1) {
-                    afficheRouteH(routesH[i][j].getProprietaire().getRoute());
+                    routesH[lineIdx][j].afficheRouteH();
                     System.out.print(batiments[lineIdx][j]);
                 } else {
-                    System.out.print('|');
-                    System.out.print("   " + tuiles[lineIdx][j - 1] + "   ");
-                    if (j == subTabLength - 1)
-                        System.out.print("|");
+                    routesV[lineIdx][j - 1].afficheRouteV();
+                    System.out.print("    " + tuiles[lineIdx][j - 1] + "    ");
+                    if (j == subTabLength - 1) {
+                        routesV[lineIdx][j - 1].afficheRouteV();
+                    }
                 }
-
             }
             System.out.println();
         }
     }
-    // Ajouter une Route
-    // public void ajouteRoute(Route r){
-    // if(!routePresent(r)){
-    // routes[r.getAbscisse()][r.getOrdonnee()]=r;
-    // }else{
-    // System.out.println("Route déja construis");
-    // }
+    //----------------------------fonctions d'ajout, de modification du plateau----------------------------//
 
-    // }
-    // Ajoute batiment permet d'ajoute Colonie et de Gagné
-    public void ajouteColonie() {
-
+    public void ajouteRoute(int x, int y, Joueur proprietaire) {
+        if (peutConstruireRoute(x, y)){
+            if (new Route(x,y).estRouteHorizontale()){
+                routesH[x][y] = new Route(proprietaire, x, y);
+            }
+            else if(new Route(x,y).estRouteVerticale()){
+                routesV[x][y] = new Route(proprietaire, x, y);
+            }
+        }
     }
 
-    // Ajoute Ville
-    public void ajouteVille() {
+    
 
-    }
-
-    // jeux gagné
     public boolean jeuGagne() {
         for (int i = 0; i < joueurs.length; i++) {
             if (joueurs[i].getNbpoints() == 10) {
@@ -116,36 +107,96 @@ public class Plateau {
         return false;
     }
 
-    public boolean routePresente(Route r) {
-        return routePresente(r.getAbscisse(), r.getOrdonnee());
+    // --------------------Fonctions auxiliaires pour :
+    // peutConstruireRoute/Batiment() et autres méthodes de vérification
+    // ---------------------//
+
+    public boolean RouteVerticaleHorsLimite(int x, int y) {
+        return x > routesV.length - 2 || x < 1 || y > routesV[0].length - 1 || y < 0;
+    }
+
+    public boolean RouteHorizontaleHorsLimite(int x, int y) {
+        return x > routesH.length - 1 || x < 0 || y > routesH[0].length - 2 || y < 1;
+    }
+
+    public boolean routeHorsLimite(int x, int y) {
+        if (new Route(x, y).estRouteVerticale()) {
+            return RouteVerticaleHorsLimite(x, y);
+        }
+        // si pas verticale : il reste alors juste à vérifier si elle rentre
+        // dans le tableau des routes horizontales
+
+        return RouteHorizontaleHorsLimite(x, y);
     }
 
     public boolean routePresente(int x, int y) {
         return (
-                routesV[x][y].getProprietaire() != null    
-                ||routesH[x][y].getProprietaire() != null
-        );
+        // on suppose ici que l'on a déjà vérifié si les coordonnées ne sont pas hors
+        // limites
+        (routesH[x][y].getProprietaire() != null)
+                || (routesV[x][y].getProprietaire() != null));
     }
 
-    public boolean routeVerticaleHorsLimite(int x, int y){
-        return x > routesV.length - 2 || x < 1 || y > routesV[0].length-1 || y<0 ;
+    public boolean routeAmieAProximite_V(Route r) { // "V": pour les routes verticales
+        int x = r.getAbscisse();
+        int y = r.getOrdonnee();
+        return r.checkIfRouteAmie(routesH[x][y])
+                || r.checkIfRouteAmie(routesH[x][y + 1])
+                || r.checkIfRouteAmie(routesH[x - 1][y])
+                || r.checkIfRouteAmie(routesH[x - 1][y + 1])
+                || r.checkIfRouteAmie(routesV[x - 1][y])
+                || r.checkIfRouteAmie(routesV[x + 1][y]);
     }
 
-    public boolean routeHorizontaleHorsLimite(int x, int y){
-        return x > routesH.length-1 || x < 0 || y > routesH[0].length - 2 || y<1 ;
+    public boolean routeAmieAProximite_H(Route r) { // "H" : pour les routes horizontales
+        int x = r.getAbscisse();
+        int y = r.getOrdonnee();
+        return (r.checkIfRouteAmie(routesH[x][y - 1])
+                || r.checkIfRouteAmie(routesH[x][y + 1])
+                || r.checkIfRouteAmie(routesV[x][y - 1])
+                || r.checkIfRouteAmie(routesV[x][y])
+                || r.checkIfRouteAmie(routesV[x + 1][y - 1])
+                || r.checkIfRouteAmie(routesV[x + 1][y]));
     }
 
-    public boolean routeHorizontale(){
+    public boolean pasDeBatimentsEnnemis_V(Joueur j, Route r) { // pour les routes verticales
+        int x = r.getAbscisse();
+        int y = r.getOrdonnee();
+        Batiment b = new Batiment(x, y);
+        return (b.checkIfBatimentAmi(j, batiments[x - 1][y]) && b.checkIfBatimentAmi(j, batiments[x][y]));
+    }
+
+    public boolean pasDeBatimentsEnnemis_H(Joueur j, Route r) { // pour les routes horizontales
+        int x = r.getAbscisse();
+        int y = r.getOrdonnee();
+        Batiment b = new Batiment(x, y);
+        return (b.checkIfBatimentAmi(j, batiments[x][y - 1]) && b.checkIfBatimentAmi(j, batiments[x][y]));
+    }
+
+    // --------------------------Méthodes de vérifications pour les différentes modifications du plateau------------------------------- //
+
+    public boolean peutConstruireRoute(int x, int y) {
+        if (routeHorsLimite(x, y))
+            return false;
+        if (routePresente(x, y))
+            return false;
+            
+        if (new Route(x, y).estRouteHorizontale()) {
+            Route aConstruire = routesH[x][y];
+            Joueur proprietaire = aConstruire.getProprietaire();
+            return (routeAmieAProximite_H(aConstruire) && pasDeBatimentsEnnemis_H(proprietaire, aConstruire));
+        }
+        // si on est arrivé là c'est que la route est verticale
+        Route aConstruire = routesV[x][y];
+        Joueur proprietaire = aConstruire.getProprietaire();
+        return (routeAmieAProximite_V(aConstruire) && pasDeBatimentsEnnemis_V(proprietaire, aConstruire));
+    }
+
+    public boolean ColoniePresente(Colonie c) {
         return false;
     }
 
-    public boolean ColoniePresente(Colonie c){
-        return false;
-    }
-
-
-        
-    public boolean VillePresente(){
+    public boolean VillePresente() {
         return false;
     }
 
@@ -177,12 +228,13 @@ public class Plateau {
         return n;
     }
 
-    //cette fonction renvoi le nombre de fois qu'un terrain est present dur le plateau
-    public int nbreDepresenceTerain(String nom){
-        int x=0;
-        for(int i=0;i<tuiles.length;i++){
-            for(int j=0;j<tuiles[i].length;j++){
-                if(tuiles[i][j].getNomTerrain().equalsIgnoreCase(nom)){
+    // cette fonction renvoi le nombre de fois qu'un terrain est present dur le
+    // plateau
+    public int nbreDepresenceTerain(String nom) {
+        int x = 0;
+        for (int i = 0; i < tuiles.length; i++) {
+            for (int j = 0; j < tuiles[i].length; j++) {
+                if (tuiles[i][j].getNomTerrain().equalsIgnoreCase(nom)) {
                     x++;
                 }
             }
@@ -190,19 +242,19 @@ public class Plateau {
         return x;
     }
 
-    //cette methode permet de choisir un terreain p
-    public String ChoisitTerrain(){
-        String []ter={"Foret","Colline","Pres","Champs","Montagne","Desert"};
-        double x=((dimension*dimension)-1)/5; //Nombre d'apparation des terrain excepté le dessert
-        String n="";
-        Random r = new Random(); 
-        int i=r.nextInt(6);
-        if(i==5 && nbreDepresenceTerain("Desert")<1){
-            n=ter[5];
-        }else if(nbreDepresenceTerain(ter[i])<x){
-            n=ter[i];
+    // cette methode permet de choisir un terreain p
+    public String ChoisitTerrain() {
+        String[] ter = { "Foret", "Colline", "Pres", "Champs", "Montagne", "Desert" };
+        double x = ((dimension * dimension) - 1) / 5; // Nombre d'apparation des terrain excepté le dessert
+        String n = "";
+        Random r = new Random();
+        int i = r.nextInt(6);
+        if (i == 5 && nbreDepresenceTerain("Desert") < 1) {
+            n = ter[5];
+        } else if (nbreDepresenceTerain(ter[i]) < x) {
+            n = ter[i];
         }
         return n;
     }
-    
+
 }
