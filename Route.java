@@ -55,4 +55,14 @@ public class Route {
     public boolean checkIfRouteAmie(Route r) {
         return proprietaire.equals(r.getProprietaire()) || r.getProprietaire() == null;
     }
+
+    public boolean checkIfBatimentAmi(Batiment ... b){
+        for (int i = 0; i < b.length; i++) {
+            if(!(proprietaire.equals(b[i].getProprietaire()) || b[i].getProprietaire() == null))
+                return false;
+        }
+        return true;
+            
+    }
+    
 }

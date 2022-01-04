@@ -10,6 +10,11 @@ public class Batiment {
         proprietaire = null;
     } 
 
+    public Batiment(int x, int y, Joueur j){
+        this(x, y);
+        proprietaire = j;
+    }
+
     @Override
     public String toString() {
         return "O";
@@ -41,12 +46,10 @@ public class Batiment {
         this.ptsDeVictoire = ptsDeVictoire;
     }
 
-    public boolean checkIfBatimentAmi(Joueur j,Batiment b){
-        return j.equals(b.getProprietaire()) || b.getProprietaire() == null;
-    }
     public Joueur getProprietaire() {
         return proprietaire;
     }
+    
     public void setProprietaire(Joueur proprietaire) {
         this.proprietaire = proprietaire;
     }

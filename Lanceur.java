@@ -24,7 +24,9 @@ public class Lanceur {
         
             
         Plateau p=new Plateau(5,2);
-
+        Joueur j = new Joueur();
+        p.afficheTabR();
+        System.out.println(p.peutConstruireColonie(6, 1, j));
     }
    
 }

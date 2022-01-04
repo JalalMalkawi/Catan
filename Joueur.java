@@ -14,8 +14,8 @@ public class Joueur {
     private boolean armeeLaPlusPuissante;
     private boolean routeLaPlusLongue;
     private Scanner scanReponse;
-    private char route;//le caractére avec le quelle on va representer ca route
-    private String villes;//le caractére avec le quelle on va répresenter ses batiment;
+    private char route;//le caractère avec lequel on va représenter les routes du joueur
+    private String ville;// idem mais pour les villes
     private String colonie;
     
     public Joueur(){
@@ -25,8 +25,8 @@ public class Joueur {
         routeLaPlusLongue=false;
         scanReponse=new Scanner(System.in);
         route='-';
-        colonie="()";
-        villes="[]";
+        colonie="O";
+        ville="X";
         deck=new ArrayList<>();
         ArrayList<Carte> CarteDeveloppement=new ArrayList<Carte>();
         ArrayList<Carte> CarteRessource=new ArrayList<Carte>();
@@ -39,8 +39,8 @@ public class Joueur {
     public String getColonie() {
         return colonie;
     }
-    public String getVilles() {
-        return villes;
+    public String getVille() {
+        return ville;
     }
     public String getType() {
         return type;
