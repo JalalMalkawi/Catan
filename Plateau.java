@@ -170,7 +170,7 @@ public class Plateau {
         }
         return n;
     }
-
+    
     //cette fonction renvoi le nombre de fois qu'un terrain est present dur le plateau
     public int nbreDepresenceTerain(String nom){
         int x=0;
@@ -218,6 +218,6 @@ public class Plateau {
             }
         }
     }
-
+    
     
 }
