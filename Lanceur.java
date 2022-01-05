@@ -30,6 +30,18 @@ public class Lanceur {
         Joueur j = new Joueur();
         p.ajouteColonie(3, 3, j);
         p.ajouteVille(3, 3, j);
+
+        p.ajouteColonie(2, 2, j);
+        p.ajouteVille(2, 2, j);
+
+        p.ajouteColonie(1, 1, j);
+        p.ajouteVille(1, 1, j);
+
+        p.ajouteColonie(4, 1, j);
+        p.ajouteVille(4, 1, j);
+
+
+
         p.afficheTabR();
 
         

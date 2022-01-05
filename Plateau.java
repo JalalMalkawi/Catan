@@ -112,12 +112,16 @@ public class Plateau {
                 routesV[x][y] = new Route(proprietaire, x, y);
             }
         }
+        System.out.println("Construction de route impossible");
     }
 
     public void ajouteColonie(int x, int y, Joueur proprietaire) {
         if (peutConstruireColonie(x, y, proprietaire)) {
             batiments[x][y] = new Colonie(x, y, proprietaire);
+            return;
         }
+        System.out.println("Impossible de construire de colonie");
+
     }
 
     public void ajouteVille(int x, int y, Joueur proprietaire) {
@@ -210,10 +214,10 @@ public class Plateau {
         // on suppose que les coordonnées en argument ne sont pas hors limites
         // 1) On verifie la règle des distances version plateau carré : cette fois ci il
         // y a donc 4 intersections (cases de batiments[][]) qui doivent être libres
-        !ColoniePresente(x + 1, y)
-                && !ColoniePresente(x, y - 1)
-                && !ColoniePresente(x - 1, y)
-                && !ColoniePresente(x, y + 1)
+                   (!ColoniePresente(x + 1, y) && !villePresente(x + 1, y))
+                && (!ColoniePresente(x, y - 1) && !villePresente(x, y-1))
+                && (!ColoniePresente(x - 1, y) && !villePresente(x - 1, y))
+                && (!ColoniePresente(x, y + 1) && !villePresente(x, y+1))
                 && !ColoniePresente(x, y) //2) on ne peut poser qu'une seule colonie par intersection
                 && !villePresente(x, y) //3) on ne peut pas poser de colonie sur une ville mais l'inverse oui...
 
@@ -230,7 +234,6 @@ public class Plateau {
         //if (!batimentHorsLimite(x, y)){return false;}
         //if (batiments[x][y].getProprietaire() != null){return false;}
         if (batiments[x][y] instanceof Ville){
-            System.out.println("une ville !!!!");
             return true;
         }
         return false;
