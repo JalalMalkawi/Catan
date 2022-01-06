@@ -31,6 +31,7 @@ public class Lanceur {
         p.ajouteColonie(3, 3, j);
         p.ajouteVille(3, 3, j);
         p.ajouteColonie(2, 2, j);
+
         
         p.ajouteRoute(3, 1, j);
         p.ajouteRoute(4, 1, j);
@@ -40,6 +41,7 @@ public class Lanceur {
         p.afficheTabR();
 
         
+
     }
 
 }

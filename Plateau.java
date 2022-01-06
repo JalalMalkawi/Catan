@@ -339,6 +339,7 @@ public class Plateau {
         for (int i = 1; i < tuiles.length-1; i++) {
             for (int j = 1; j < tuiles[i].length-1; j++) {
                 if (tuiles[i][j].getNomTerrain().equalsIgnoreCase(nom)) {
+
                     x++;
                 }
             }
@@ -354,8 +355,10 @@ public class Plateau {
         Random r = new Random();
         while(n.equals("")){
             int i = r.nextInt(6);
-            if (i == 5 && nbreDepresenceTerain("Desert") < 1) {
-                n = ter[5];
+            if (i == 5){
+                if(nbreDepresenceTerain("Desert") < 1) {
+                    n = ter[5];
+                }
             } else if (nbreDepresenceTerain(ter[i]) < x) {
                 n = ter[i];
             }
@@ -373,7 +376,7 @@ public class Plateau {
                     for (int k = a - 1; k <= a; k++) { // Vérifier que les batiment qui encadre la tuille sont occupé
                                                        // par des colonie ou des villes
                         for (int l = b - 1; l <= b; l++) {
-                            if (batiments[k][l] != null) {
+                            if(batiments[k][l] != null) {
                                 batiments[k][l].getProprietaire().ajouteCarteRessoure(tuiles[a][b].getRessource());// une
                                                                                                                    // colonie
                                                                                                                    // gagne
@@ -395,5 +398,4 @@ public class Plateau {
             }
         }
     }
-
 }

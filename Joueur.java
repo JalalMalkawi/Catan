@@ -186,5 +186,6 @@ public class Joueur {
     public void ajouteCarteDeve(Carte c){
         deck.get(0).add(c);
     }
-
+    
+  
 }
