@@ -336,8 +336,8 @@ public class Plateau {
     // plateau
     public int nbreDepresenceTerain(String nom) {
         int x = 0;
-        for (int i = 0; i < tuiles.length; i++) {
-            for (int j = 0; j < tuiles[i].length; j++) {
+        for (int i = 1; i < tuiles.length-1; i++) {
+            for (int j = 1; j < tuiles[i].length-1; j++) {
                 if (tuiles[i][j].getNomTerrain().equalsIgnoreCase(nom)) {
                     x++;
                 }
