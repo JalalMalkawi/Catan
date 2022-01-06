@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Joueur {
     String alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     String alphabetI="-ACEGIKMOQSUWY";
-    String alphabetp="-BDFHJLNPRTVXZ";
+    String alphabetP="-BDFHJLNPRTVXZ";
     private String name;
     private String type;
     private int nbpoints;
@@ -14,8 +14,8 @@ public class Joueur {
     private boolean armeeLaPlusPuissante;
     private boolean routeLaPlusLongue;
     private Scanner scanReponse;
-    private char route;//le caractére avec le quelle on va representer ca route
-    private String villes;//le caractére avec le quelle on va répresenter ses batiment;
+    private char route;//le caractère avec lequel on va représenter les routes du joueur
+    private String ville;// idem mais pour les villes
     private String colonie;
     
     public Joueur(){
@@ -25,8 +25,8 @@ public class Joueur {
         routeLaPlusLongue=false;
         scanReponse=new Scanner(System.in);
         route='-';
-        colonie="()";
-        villes="[]";
+        colonie="O";
+        ville="X";
         deck=new ArrayList<>();
         ArrayList<Carte> CarteDeveloppement=new ArrayList<Carte>();
         ArrayList<Carte> CarteRessource=new ArrayList<Carte>();
@@ -39,8 +39,8 @@ public class Joueur {
     public String getColonie() {
         return colonie;
     }
-    public String getVilles() {
-        return villes;
+    public String getVille() {
+        return ville;
     }
     public String getType() {
         return type;
@@ -92,8 +92,8 @@ public class Joueur {
         return i+j;
     }
     public char demanderAction(){
-        System.out.println("Veiller saisir le caractére correspondant a l'action que vous voulez effectuer");
-        System.out.println("(a) Lancer les dés");
+        System.out.println("Veuillez saisir le caractère correspondant à l'action que vous voulez effectuer");
+        System.out.println("(a) Lancer les dès");
         System.out.println("(b) Construire une route");
         System.out.println("(c) Construire une ville");
         System.out.println("(d) Construire une Colonie");
@@ -101,7 +101,7 @@ public class Joueur {
         System.out.println("(f) faire un échange");
         return scanReponse.next().charAt(0);
     }
-    //demander les coordonné des villes,des colonies
+ 
     public int[] demanderCoordonnes() {
         String coordonnees = demanderStr("Saisir les coordonnées d'une case (Ligne.Colonne)");
         int[] coord = new int[2];
@@ -116,7 +116,7 @@ public class Joueur {
     public int [] demanderCordonneRoute(String coordonnees){
         int[] coord = new int[2];
         if(alphabet.indexOf(coordonnees.charAt(0))%2==0){
-            coord[0] = alphabetp.indexOf(coordonnees.charAt(0)); 
+            coord[0] = alphabetP.indexOf(coordonnees.charAt(0)); 
         }else{
             coord[0] = alphabetI.indexOf(coordonnees.charAt(0)); 
         }
