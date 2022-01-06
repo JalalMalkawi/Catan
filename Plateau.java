@@ -23,10 +23,12 @@ public class Plateau {
         routesH = new Route[dimension + 1][dimension + 2]; // deux routes horizontales de plus aux extrémités des lignes
                                                            // pour la même raison qu'au dessus
         joueurs = new Joueur[nbrjoueur];
-        initialiseBatiments(batiments);
+        initialiseBatiments();
         initialiseRoutes(routesH);
         initialiseRoutes(routesV);
-        initialiseJoueur(joueurs);
+        initialiseJoueur();
+        initialiseTuiles();
+        terrainsEtNumerosAlea();
     }
 
     public Batiment[][] getBatiments() {
@@ -53,17 +55,17 @@ public class Plateau {
         }
     }
 
-    public void initialiseBatiments(Batiment[][] tab) {
-        for (int i = 0; i < tab.length; i++) {
-            for (int j = 0; j < tab.length; j++) {
-                tab[i][j] = new Batiment(i, j);
+    public void initialiseBatiments() {
+        for (int i = 0; i < batiments.length; i++) {
+            for (int j = 0; j < batiments.length; j++) {
+                batiments[i][j] = new Batiment(i, j);
             }
         }
     }
 
-    public void initialiseJoueur(Joueur[] j) {
-        for (int i = 0; i < j.length; i++) {
-            j[i] = new Joueur();
+    public void initialiseJoueur() {
+        for (int i = 0; i < joueurs.length; i++) {
+            joueurs[i] = new Joueur();
         }
     }
 
@@ -72,6 +74,24 @@ public class Plateau {
             System.out.print(c);
         }
     }
+
+    public void initialiseTuiles(){
+        for (int i = 0; i < tuiles.length; i++) {
+            for (int j = 0; j < tuiles.length; j++) {
+                tuiles[i][j] = new Tuile(i, j);
+            }
+        }   
+    } 
+    
+    public void terrainsEtNumerosAlea(){
+        for (int i = 1; i < tuiles.length-1; i++) {
+            for (int j = 1; j < tuiles.length-1; j++) {
+                tuiles[i][j].setNomTerrain(choisitTerrain());
+                tuiles[i][j].setNumero(choisitNumero());
+            }
+        }
+    }
+
 
     public void afficheTabR() {
         int tabLength = routesV.length + routesH.length;
@@ -88,11 +108,11 @@ public class Plateau {
             }
             for (int j = 2; j < subTabLength + 1; j++) {
                 if (i % 2 == 1) {
-                    routesH[lineIdx - 1][j].afficheRouteH();
+                    routesH[lineIdx - 1][j-1].afficheRouteH();
                     System.out.print(batiments[lineIdx][j]);
                 } else {
                     routesV[lineIdx][j - 1].afficheRouteV();
-                    System.out.print("    " + tuiles[lineIdx - 1][j - 1] + "    ");
+                    System.out.print(tuiles[lineIdx][j - 1]);
                     if (j == subTabLength) {
                         routesV[lineIdx - 1][subTabLength - 2].afficheRouteV();
                     }
@@ -107,10 +127,11 @@ public class Plateau {
     public void ajouteRoute(int x, int y, Joueur proprietaire) {
         if (peutConstruireRoute(x, y, proprietaire)) {
             if (new Route(x, y).estRouteHorizontale()) {
-                routesH[x][y] = new Route(proprietaire, x, y);
+                routesH[x-1][y] = new Route(proprietaire, x, y);
             } else if (new Route(x, y).estRouteVerticale()) {
                 routesV[x][y] = new Route(proprietaire, x, y);
             }
+            return;
         }
         System.out.println("Construction de route impossible");
     }
@@ -194,7 +215,6 @@ public class Plateau {
                 return false;
         }
         return true;
-
     }
 
     // -----------------------Fonctions de vérifications pour la construction de
@@ -231,13 +251,8 @@ public class Plateau {
     }
 
     public boolean villePresente(int x, int y) {
-        //if (!batimentHorsLimite(x, y)){return false;}
-        //if (batiments[x][y].getProprietaire() != null){return false;}
-        if (batiments[x][y] instanceof Ville){
-            return true;
-        }
-        return false;
-        //return (!batimentHorsLimite(x, y) && batiments[x][y].getProprietaire() != null
+        return (batiments[x][y] instanceof Ville);
+        //return (!batimentHorsLimite (x, y) && batiments[x][y].getProprietaire() != null
           //      && batiments[x][y] instanceof Ville);
     }
 
@@ -266,7 +281,9 @@ public class Plateau {
     }
 
     public boolean peutConstruireColonie(int x, int y, Joueur j) {
-        if (batimentHorsLimite(x, y) || ColoniePresente(x, y) || !espaceDisponiblePourColonie(x, y))
+        if (batimentHorsLimite(x, y))
+            return false;
+        if ( ColoniePresente(x, y) || !espaceDisponiblePourColonie(x, y))
             return false;
         return (checkIfRouteAmie(j, routesV[x][y], routesV[x + 1][y], routesH[x][y], routesH[x][y + 1]));
     }
@@ -319,8 +336,8 @@ public class Plateau {
     // plateau
     public int nbreDepresenceTerain(String nom) {
         int x = 0;
-        for (int i = 0; i < tuiles.length; i++) {
-            for (int j = 0; j < tuiles[i].length; j++) {
+        for (int i = 1; i < tuiles.length-1; i++) {
+            for (int j = 1; j < tuiles[i].length-1; j++) {
                 if (tuiles[i][j].getNomTerrain().equalsIgnoreCase(nom)) {
 
                     x++;
@@ -331,16 +348,21 @@ public class Plateau {
     }
 
     // cette methode permet de choisir un terreain p
-    public String ChoisitTerrain() {
+    public String choisitTerrain() {
         String[] ter = { "Foret", "Colline", "Pres", "Champs", "Montagne", "Desert" };
         double x = ((dimension * dimension) - 1) / 5; // Nombre d'apparation des terrain excepté le dessert
         String n = "";
         Random r = new Random();
-        int i = r.nextInt(6);
-        if (i == 5 && nbreDepresenceTerain("Desert") < 1) {
-            n = ter[5];
-        } else if (nbreDepresenceTerain(ter[i]) < x) {
-            n = ter[i];
+        while(n.equals("")){
+            int i = r.nextInt(6);
+            if (i == 5){
+                if(nbreDepresenceTerain("Desert") < 1) {
+                    n = ter[5];
+                }
+            } else if (nbreDepresenceTerain(ter[i]) < x) {
+                n = ter[i];
+            }
+            
         }
         return n;
     }

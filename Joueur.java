@@ -1,3 +1,4 @@
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -5,8 +6,8 @@ import java.util.Scanner;
 
 public class Joueur {
     String alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    String alphabetI="-ACEGIKMOQSUWY";
-    String alphabetP="-BDFHJLNPRTVXZ";
+    String alphabetI="-ACEGIKMOQSUWY"; // lettres aux positions impaires dans l'alphabet
+    String alphabetP="-BDFHJLNPRTVXZ"; // lettres aux positions paires
     private String name;
     private String type;
     private int nbpoints;
@@ -17,6 +18,17 @@ public class Joueur {
     private char route;//le caractère avec lequel on va représenter les routes du joueur
     private String ville;// idem mais pour les villes
     private String colonie;
+    //couleurs pour l'affichage des routes,colonies... du joueur
+    
+    public static final String RESET = "\u001B[0m";
+    public static final String BLACK = "\u001B[30m";
+    public static final String RED = "\u001B[31m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String BLUE = "\u001B[34m";
+    public static final String PURPLE = "\u001B[35m";
+    public static final String CYAN = "\u001B[36m";
+    public static final String WHITE = "\u001B[37m";
     
     public Joueur(){
         name="Anonyme";
@@ -24,24 +36,30 @@ public class Joueur {
         armeeLaPlusPuissante=false;
         routeLaPlusLongue=false;
         scanReponse=new Scanner(System.in);
-        route='-';
-        colonie="O";
-        ville="X";
+        route='*';
+        colonie=RED+"C"+ RESET;
+        ville=RED+"V"+ RESET ;
         deck=new ArrayList<>();
         ArrayList<Carte> CarteDeveloppement=new ArrayList<Carte>();
         ArrayList<Carte> CarteRessource=new ArrayList<Carte>();
         deck.add(CarteDeveloppement);
         deck.add(CarteRessource);
     }
+
+
+    //---------------Getters et setters-------------------
     public char getRoute() {
        return route;
     }
+
     public String getColonie() {
         return colonie;
     }
+
     public String getVille() {
         return ville;
     }
+
     public String getType() {
         return type;
     }
@@ -49,18 +67,57 @@ public class Joueur {
     public int getNbpoints() {
         return nbpoints;
     }
+
     public ArrayList<ArrayList<Carte>> getDeck() {
         return deck;
     }
+
     public String getName() {
         return name;
     }
+
     public Scanner getScanReponse() {
         return scanReponse;
     }
-    public void setNom(String nom){
-        this.name=nom;
+
+    public void setName(String name) {
+        this.name = name;
     }
+
+    public void setVille(String ville) {
+        this.ville = ville;
+    }
+
+    public void setRoute(char route) {
+        this.route = route;
+    }
+
+    public void setColonie(String colonie) {
+        this.colonie = colonie;
+    }
+
+    public void setRouteLaPlusLongue(boolean routeLaPlusLongue) {
+        this.routeLaPlusLongue = routeLaPlusLongue;
+    }
+
+    public void setArmeeLaPlusPuissante(boolean armeeLaPlusPuissante) {
+        this.armeeLaPlusPuissante = armeeLaPlusPuissante;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setNbpoints(int nbpoints) {
+        this.nbpoints = nbpoints;
+    }
+
+    public void setDeck(ArrayList<ArrayList<Carte>> deck) {
+        this.deck = deck;
+    }
+//--------------------
+
+
     public void finish(){
         scanReponse.close();
     }

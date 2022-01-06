@@ -1,4 +1,3 @@
-import java.io.ObjectInputStream.GetField;
 
 public class Tuile {
     private int numero;
@@ -6,48 +5,65 @@ public class Tuile {
     private int ordonnee;
     private String nomTerrain;
     private boolean voleurPresent;
-    //CONSTRUCTEUR
-    public Tuile(int num, int ab,int ord,String nom,boolean p){
+    //CONSTRUCTEURS
+    public Tuile(int num, int x,int y,String nomTerrain){
         numero=num;
-        abscisse=ab;
-        ordonnee=ord;
-        nomTerrain=nom;
+        abscisse=x;
+        ordonnee=y;
+        this.nomTerrain=nomTerrain;
     }
+
+    public Tuile(int x, int y){
+        abscisse = x;
+        ordonnee = y;
+        nomTerrain = "";
+    }
+
     public void setAbscisse(int abscisse) {
         this.abscisse = abscisse;
     }
+
     public void setNomTerrain(String nomTerrain) {
         this.nomTerrain = nomTerrain;
     }
+
     public void setNumero(int numero) {
         this.numero = numero;
     }
+
     public void setOrdonnee(int ordonnee) {
         this.ordonnee = ordonnee;
-    }public void setVoleurPresent(boolean voleurPresent) {
+    }
+    public void setVoleurPresent(boolean voleurPresent) {
         this.voleurPresent = voleurPresent;
     }
+
     public int getAbscisse() {
         return abscisse;
     }
+
     public String getNomTerrain() {
         return nomTerrain;
     }
+
     public int getNumero() {
         return numero;
     }
+
     public int getOrdonnee() {
         return ordonnee;
     }
+
     public boolean getVoleurPresent(){
         return voleurPresent;
     }
-    public void AfficheTuille(){
-        String St=nomTerrain+" "+numero;
-        while(St.length()<12){
-            St+=" ";
+    @Override
+    public String toString(){
+        String st=" "+nomTerrain+" "+numero;
+        while(st.length()<12){
+            st+=" ";
         }
-        System.out.print(St);
+        return st;
     }
     public void poseVoleur(){
         if(voleurPresent){
