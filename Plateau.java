@@ -103,6 +103,7 @@ public class Plateau {
         int tabLength = routesV.length + routesH.length;
         int subTabLength = routesV[0].length;
         int lineIdx = 0;
+        int routeIdx = 0;
 
         System.out.println(
                 "          ****************************\n          *     L'île de Catane      *\n          ****************************");
@@ -115,15 +116,18 @@ public class Plateau {
                 lineIdx++;
                 System.out.print(batiments[lineIdx][1]);
             }
+            else if(i % 2 == 0){
+                routeIdx++;
+            }
             for (int j = 2; j < subTabLength + 1; j++) {
                 if (i % 2 == 1) {
                     routesH[lineIdx-1][j-1].afficheRouteH();
                     System.out.print(batiments[lineIdx][j]);
                 } else {
-                    routesV[lineIdx-1][j - 1].afficheRouteV();
+                    routesV[routeIdx][j - 2].afficheRouteV();
                     System.out.print(tuiles[lineIdx][j - 1]);
                     if (j == subTabLength) {
-                        routesV[lineIdx-1][subTabLength - 2].afficheRouteV();
+                        routesV[lineIdx-1][j - 1].afficheRouteV();
                     }
                 }
             }
