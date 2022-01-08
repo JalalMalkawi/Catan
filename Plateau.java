@@ -84,10 +84,16 @@ public class Plateau {
     } 
     
     public void terrainsEtNumerosAlea(){
+        String st="";
         for (int i = 1; i < tuiles.length-1; i++) {
             for (int j = 1; j < tuiles.length-1; j++) {
-                tuiles[i][j].setNomTerrain(choisitTerrain());
-                tuiles[i][j].setNumero(choisitNumero());
+                st=choisitTerrain();
+                tuiles[i][j].setNomTerrain(st);
+                if(st.equals("Desert")){
+                    tuiles[i][j].setNumero(7);
+                }else{
+                    tuiles[i][j].setNumero(choisitNumero());
+                }  
             }
         }
     }
