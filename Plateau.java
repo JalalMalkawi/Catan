@@ -18,7 +18,7 @@ public class Plateau {
         tuiles = new Tuile[dimension + 2][dimension + 2];
         batiments = new Batiment[dimension + 3][dimension + 3]; // on stocke le plateau aux indices (1,1) à
                                                                 // (dimension+1,dimension+1)
-        routesV = new Route[dimension + 2][dimension + 1]; // une ligne de routes verticales en plus pour les méthodes
+        routesV = new Route[dimension + 2][dimension + 1]; // 2 lignes de routes verticales en plus pour les méthodes
                                                            // de "vérification" comme peutConstruire()
         routesH = new Route[dimension + 1][dimension + 2]; // deux routes horizontales de plus aux extrémités des lignes
                                                            // pour la même raison qu'au dessus
@@ -100,7 +100,10 @@ public class Plateau {
 
         System.out.println(
                 "          ****************************\n          *     L'île de Catane      *\n          ****************************");
-
+        for (int i = 1; i < dimension+2; i++) {
+            System.out.print(alphabet.charAt(i)+"            ");
+        }
+        System.out.println();
         for (int i = 1; i < tabLength - 1; i++) {
             if (i % 2 == 1) {
                 lineIdx++;
@@ -108,13 +111,13 @@ public class Plateau {
             }
             for (int j = 2; j < subTabLength + 1; j++) {
                 if (i % 2 == 1) {
-                    routesH[lineIdx - 1][j-1].afficheRouteH();
+                    routesH[lineIdx-1][j-1].afficheRouteH();
                     System.out.print(batiments[lineIdx][j]);
                 } else {
-                    routesV[lineIdx][j - 1].afficheRouteV();
+                    routesV[lineIdx-1][j - 1].afficheRouteV();
                     System.out.print(tuiles[lineIdx][j - 1]);
                     if (j == subTabLength) {
-                        routesV[lineIdx - 1][subTabLength - 2].afficheRouteV();
+                        routesV[lineIdx-1][subTabLength - 2].afficheRouteV();
                     }
                 }
             }
@@ -127,9 +130,9 @@ public class Plateau {
     public void ajouteRoute(int x, int y, Joueur proprietaire) {
         if (peutConstruireRoute(x, y, proprietaire)) {
             if (new Route(x, y).estRouteHorizontale()) {
-                routesH[x-1][y] = new Route(proprietaire, x, y);
+                routesH[x/2][y] = new Route(proprietaire, x, y);
             } else if (new Route(x, y).estRouteVerticale()) {
-                routesV[x][y] = new Route(proprietaire, x, y);
+                routesV[x/2][y] = new Route(proprietaire, x, y);
             }
             return;
         }
@@ -339,7 +342,6 @@ public class Plateau {
         for (int i = 1; i < tuiles.length-1; i++) {
             for (int j = 1; j < tuiles[i].length-1; j++) {
                 if (tuiles[i][j].getNomTerrain().equalsIgnoreCase(nom)) {
-
                     x++;
                 }
             }

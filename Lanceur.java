@@ -30,15 +30,25 @@ public class Lanceur {
         Joueur j = new Joueur();
         p.ajouteColonie(3, 3, j);
         p.ajouteVille(3, 3, j);
+
         p.ajouteColonie(2, 2, j);
 
+        p.ajouteColonie(1, 1, j);
+
+        //p.ajouteRoute(1, 1, j);
+        //p.ajouteRoute(3, 1, j);
+        //p.ajouteRoute(1, 1, j);
+        //p.ajouteRoute(2, 1, j);
+
+        //p.ajouteColonie(1, 1, j);
+
+        //p.ajouteRoute(5, 1, j);
         
-        p.ajouteRoute(3, 1, j);
-        p.ajouteRoute(4, 1, j);
 
 
         //j.setRoute('*');
         p.afficheTabR();
+        System.out.println(2/2);
 
         
 
