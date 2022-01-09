@@ -99,6 +99,7 @@ public class Plateau {
     }
 
 
+
     public void afficheTabR() {
         int tabLength = routesV.length + routesH.length;
         int subTabLength = routesV[0].length;
@@ -107,6 +108,7 @@ public class Plateau {
 
         System.out.println(
                 "          ****************************\n          *     L'île de Catane      *\n          ****************************");
+        System.out.print("   ");
         for (int i = 1; i < dimension+2; i++) {
             System.out.print(alphabet.charAt(i)+"            ");
         }
@@ -114,7 +116,7 @@ public class Plateau {
         for (int i = 1; i < tabLength - 1; i++) {
             if (i % 2 == 1) {
                 lineIdx++;
-                System.out.print(batiments[lineIdx][1]);
+                System.out.print(alphabet.charAt(i)+"  "+batiments[lineIdx][1]);
             }
             else if(i % 2 == 0){
                 routeIdx++;
@@ -124,6 +126,7 @@ public class Plateau {
                     routesH[lineIdx-1][j-1].afficheRouteH();
                     System.out.print(batiments[lineIdx][j]);
                 } else {
+                    if(j==2) System.out.print(alphabet.charAt(i)+"  ");
                     routesV[routeIdx][j - 2].afficheRouteV();
                     System.out.print(tuiles[lineIdx][j - 1]);
                     if (j == subTabLength) {
@@ -137,15 +140,20 @@ public class Plateau {
     // ----------------------------fonctions d'ajout, de modification du
     // plateau----------------------------//
 
-    public void ajouteRoute(int x, int y, Joueur proprietaire) {
-        if (peutConstruireRoute(x, y, proprietaire)) {
-            if (new Route(x, y).estRouteHorizontale()) {
-                routesH[x/2][y] = new Route(proprietaire, x, y);
-            } else if (new Route(x, y).estRouteVerticale()) {
-                routesV[x/2][y] = new Route(proprietaire, x, y);
-            }
-            return;
+    public void ajouteRoute(int x, int y,int t,Joueur proprietaire) { //x,y,z : nombres contenus dans le tableau "int coord[]" qu'on renvoie après avoir demandé au joueur les coordonnées de la route
+        switch (t) {
+            case 1: // routeHorizontale
+                if(peutConstruireRoute(x-1, y, proprietaire)) 
+                    routesH[x-1][y] = new Route(proprietaire, x-1, y);
+                    return;
+            case 0:
+                if(peutConstruireRoute(x, y-1, proprietaire)) 
+                    routesV[x][y-1] = new Route(proprietaire, x, y-1);
+                    return;
+            default:
+                System.out.println("Votre route n'est ni horizontale ni verticale. Très étrange!");
         }
+        //Si on est arrivés ici c'est qu'une condition nous empêche de construire la route
         System.out.println("Construction de route impossible");
     }
 
@@ -175,11 +183,11 @@ public class Plateau {
      **/
 
     public boolean RouteVerticaleHorsLimite(int x, int y) {
-        return x > routesV.length - 2 || x < 1 || y > routesV[0].length - 1 || y < 0;
+        return x > routesV.length - 1 || x < 1 || y > routesV[0].length - 1 || y < 0;
     }
 
     public boolean RouteHorizontaleHorsLimite(int x, int y) {
-        return x > routesH.length - 1 || x < 0 || y > routesH[0].length - 2 || y < 1;
+        return x > routesH.length - 1 || x < 0 || y > routesH[0].length - 1 || y < 1;
     }
 
     public boolean routeHorsLimite(int x, int y) {
@@ -188,7 +196,6 @@ public class Plateau {
         }
         // si pas verticale : il reste alors juste à vérifier si elle rentre
         // dans le tableau des routes horizontales
-
         return RouteHorizontaleHorsLimite(x, y);
     }
 
@@ -213,13 +220,13 @@ public class Plateau {
     public boolean pasDeBatimentsEnnemis_RV(int x, int y, Joueur j) {
         // pour les routes verticales, on vérifie si il n'y a pas de batiments ennemis
         // en haut et en bas
-        return (checkIfBatimentAmi(j, batiments[x - 1][y]) && checkIfBatimentAmi(j, batiments[x][y]));
+        return (checkIfBatimentAmi(j, batiments[x][y+1]) && checkIfBatimentAmi(j, batiments[x+1][y+1]));
     }
 
     public boolean pasDeBatimentsEnnemis_RH(int x, int y, Joueur j) { // pour les routes horizontales, même principe
                                                                       // sauf qu'on regarde à droite et à gauche
 
-        return (checkIfBatimentAmi(j, batiments[x][y - 1], batiments[x][y]));
+        return (checkIfBatimentAmi(j, batiments[x+1][y], batiments[x+1][y+1]));
     }
 
     public boolean checkIfBatimentAmi(Joueur proprietaire, Batiment... b) {
@@ -298,7 +305,7 @@ public class Plateau {
             return false;
         if ( ColoniePresente(x, y) || !espaceDisponiblePourColonie(x, y))
             return false;
-        return (checkIfRouteAmie(j, routesV[x][y], routesV[x + 1][y], routesH[x][y], routesH[x][y + 1]));
+        return (checkIfRouteAmie(j, routesV[x-1][y-1], routesV[x][y-1], routesH[x-1][y-1], routesH[x-1][y + 1]));
     }
 
     public boolean peutConstruireVille(int x, int y, Joueur j) {

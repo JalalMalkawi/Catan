@@ -158,25 +158,27 @@ public class Joueur {
         return scanReponse.next().charAt(0);
     }
  
-    public int[] demanderCoordonnes() {
+    public int[] demanderCoordonneesBatiment() {
         String coordonnees = demanderStr("Saisir les coordonnées d'une case (Ligne.Colonne)");
         int[] coord = new int[2];
         coord[0] = alphabet.indexOf(coordonnees.charAt(0)); 
         coord[1] = Integer.parseInt( String.valueOf(coordonnees.charAt(1)));
         return coord;
     }
-    public String demanderCordonerRoute(){
+    public String demanderCordoneesRoute(){
         return  demanderStr("Saisir les coordonnées d'une case (Ligne.Colonne)");
     }
     //revoie les coordonné d'une route en fonction qu'elle soit verticale ou horizontale
-    public int [] demanderCordonneRoute(String coordonnees){
-        int[] coord = new int[2];
+    //sortie :[abs dans routesV ou routesH][ord dans routesV ou routesH][nbr qui indique si c'est routesV ou routesH "ex: 1 pour routesV et 0 pr routesH"]
+    public int [] demanderCordonneesRoute(String coordonnees){
+        int[] coord = new int[3];
         if(alphabet.indexOf(coordonnees.charAt(0))%2==0){
             coord[0] = alphabetP.indexOf(coordonnees.charAt(0)); 
         }else{
             coord[0] = alphabetI.indexOf(coordonnees.charAt(0)); 
         }
         coord[1] = Integer.parseInt( String.valueOf(coordonnees.charAt(1)));
+        coord[2] = (coord[0] % 2 == 0) ? 1 : 0 ; // si coord[0] est pair, i.e si c'est une route verticale qu'on pose, alors on mets comme code le chiffre 0 (comme 0 modulo 2...). Autrement on mets 1 (route horizontale)
         return coord;
     }
 
