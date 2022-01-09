@@ -345,8 +345,7 @@ public class Plateau {
         for (int i = 1; i < tuiles.length-1; i++) {
             for (int j = 1; j < tuiles[i].length-1; j++) {
                 if (tuiles[i][j].getNomTerrain().equalsIgnoreCase(nom)) {
-
-                    x++;
+                   x++;
                 }
             }
         }
