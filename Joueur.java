@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
+import javax.management.relation.RelationTypeNotFoundException;
+
 
 public class Joueur {
     String alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -189,6 +191,65 @@ public class Joueur {
     public void ajouteCarteDeve(Carte c){
         deck.get(0).add(c);
     }
+    public int nombbreMinerai(){
+        int n=0;
+        for(int i=0;i<deck.get(1).size();i++){
+            if(deck.get(1).get(i).getNom().equalsIgnoreCase("minerai")){
+                n++;
+            }
+        }
+        return n;
+    }
+    public int nombbrebois(){
+        int n=0;
+        for(int i=0;i<deck.get(1).size();i++){
+            if(deck.get(1).get(i).getNom().equalsIgnoreCase("bois")){
+                n++;
+            }
+        }
+        return n;
+    }
+    public int nombbreLaine(){
+        int n=0;
+        for(int i=0;i<deck.get(1).size();i++){
+            if(deck.get(1).get(i).getNom().equalsIgnoreCase("laine")){
+                n++;
+            }
+        }
+        return n;
+    }
+    public int nombbreBle(){
+        int n=0;
+        for(int i=0;i<deck.get(1).size();i++){
+            if(deck.get(1).get(i).getNom().equalsIgnoreCase("ble")){
+                n++;
+            }
+        }
+        return n;
+    }
+    public int nombbreArgile(){
+        int n=0;
+        for(int i=0;i<deck.get(1).size();i++){
+            if(deck.get(1).get(i).getNom().equalsIgnoreCase("argile")){
+                n++;
+            }
+        }
+        return n;
+    }
+    //permet de savoir le nombre si le joueur a des resource nécessaire pour construire une route
+    public boolean peutConstruireRoute(){
+        return (nombbrebois()>0 && nombbreArgile()>0);
+    }
+    //permet de savoir le nombre si le joueur a des resource nécessaire pour construire une Colonie
+    public boolean peutConstruireColonie(){
+        return (nombbrebois()>0 && nombbreArgile()>0 && nombbreBle()>0 && nombbreLaine()>0);
+    }
+    //permet de savoir le nombre si le joueur a des resource nécessaire pour construire une ville
+    public boolean peutConstruireVille(){
+        return (nombbreBle()>1 && nombbreMinerai()>2);
+    }
+    public boolean peutAcheterCarteDevelloppement(){
+        return (nombbreMinerai()>0 && nombbreBle()>0 && nombbreLaine()>0);
+    }
     
-  
 }
