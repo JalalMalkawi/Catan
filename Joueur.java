@@ -1,4 +1,3 @@
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -182,9 +181,11 @@ public class Joueur {
         coord[1] = Integer.parseInt( String.valueOf(coordonnees.charAt(1)));
         return coord;
     }
+
     public void ajouteCarteRessoure(Carte c){
         deck.get(1).add(c);    
     }
+    
     public void ajouteCarteDeve(Carte c){
         deck.get(0).add(c);
     }
