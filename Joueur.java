@@ -1,3 +1,4 @@
+import java.nio.charset.CoderResult;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -116,7 +117,7 @@ public class Joueur {
     public void setDeck(ArrayList<ArrayList<Carte>> deck) {
         this.deck = deck;
     }
-//--------------------
+    //--------------------
 
 
     public void finish(){
@@ -149,19 +150,20 @@ public class Joueur {
         int j=r.nextInt(6)+1;
         return i+j;
     }
-    public char demanderAction(){
-        System.out.println("Veuillez saisir le caractère correspondant à l'action que vous voulez effectuer");
-        System.out.println("(a) Lancer les dès");
-        System.out.println("(b) Construire une route");
-        System.out.println("(c) Construire une ville");
-        System.out.println("(d) Construire une Colonie");
-        System.out.println("(e) jouer une carte Chevalier");
-        System.out.println("(f) faire un échange");
-        return scanReponse.next().charAt(0);
+    public int demanderAction(){
+        System.out.println("Veuillez saisir le numéro correspondant à l'action que vous voulez effectuer");
+        System.out.println("(1) Lancer les dès");
+        System.out.println("(2) Construire une route");
+        System.out.println("(3) Construire une ville");
+        System.out.println("(4) Construire une Colonie");
+        System.out.println("(5) jouer une carte Chevalier");
+        System.out.println("(6) acheter une carte developpement");
+        System.out.println("(7) faire un échange");
+        return scanReponse.nextInt();
     }
  
     public int[] demanderCoordonneesBatiment() {
-        String coordonnees = demanderStr("Saisir les coordonnées d'une case (Ligne.Colonne)");
+        String coordonnees = demanderStr("Saisir les coordonnées du Batiment a placé (Ligne.Colonne)");
         int[] coord = new int[2];
         coord[0] = alphabet.indexOf(coordonnees.charAt(0)); 
         coord[1] = Integer.parseInt( String.valueOf(coordonnees.charAt(1)));
@@ -172,7 +174,8 @@ public class Joueur {
     }
     //revoie les coordonné d'une route en fonction qu'elle soit verticale ou horizontale
     //sortie :[abs dans routesV ou routesH][ord dans routesV ou routesH][nbr qui indique si c'est routesV ou routesH "ex: 1 pour routesV et 0 pr routesH"]
-    public int [] demanderCordonneesRoute(String coordonnees){
+    public int [] demanderCordonneesRoute(){
+        String coordonnees=demanderStr("Saisir les coordonnées d'une case (Ligne.Colonne)");
         int[] coord = new int[3];
         if(alphabet.indexOf(coordonnees.charAt(0))%2==0){
             coord[0] = alphabetP.indexOf(coordonnees.charAt(0)); 
@@ -181,6 +184,13 @@ public class Joueur {
         }
         coord[1] = Integer.parseInt( String.valueOf(coordonnees.charAt(1)));
         coord[2] = (coord[0] % 2 == 0) ? 1 : 0 ; // si coord[0] est pair, i.e si c'est une route verticale qu'on pose, alors on mets comme code le chiffre 0 (comme 0 modulo 2...). Autrement on mets 1 (route horizontale)
+        return coord;
+    }
+    public int [] demadeCordoneesVoleur(){
+        String coordonnees = demanderStr("Saisir les coordonnées du Batiment a placé (Ligne.Colonne)");
+        int[] coord = new int[2];
+        coord[0] = alphabetP.indexOf(coordonnees.charAt(0)); 
+        coord[1]=alphabetP.indexOf(coordonnees.charAt(1));;
         return coord;
     }
 
@@ -250,6 +260,24 @@ public class Joueur {
     }
     public boolean peutAcheterCarteDevelloppement(){
         return (nombbreMinerai()>0 && nombbreBle()>0 && nombbreLaine()>0);
+    }
+    public void suprimerCarte(Carte c, int n){
+        for(int i=0;i<n;i++){
+            deck.get(1).remove(c);
+        }   
+    }
+    public void invention(){
+       String [] tab={"bois","argile","laine","ble","minerai"};
+       int x=demanderInt("1-bois \n2-argile\n3-laine\n4-ble\5-minerai");
+        ajouteCarteRessoure(new Carte(tab[x]));
+    }
+
+    public void volercarte(Joueur j){
+        Random r=new Random();
+        int x=r.nextInt(j.getDeck().get(1).size());
+        Carte c=j.getDeck().get(1).get(x);
+        j.getDeck().get(1).remove(j.getDeck().get(1).get(x));
+        this.ajouteCarteRessoure(c);
     }
     
 }

@@ -380,35 +380,36 @@ public class Plateau {
                 }
             } else if (nbreDepresenceTerain(ter[i]) < x) {
                 n = ter[i];
-            }
-            
+            }           
         }
         return n;
     }
-
     public void getRoussource(int x) {
         for (int i = 1; i < tuiles.length - 1; i++) {
             for (int j = 1; j < tuiles[0].length - 1; j++) {
                 if (tuiles[i][j].getNumero() == x) { // Verifier si la tuille porte le numéro donner en argument;
                     int a = tuiles[i][j].getAbscisse();
                     int b = tuiles[i][j].getOrdonnee();
-                    for (int k = a - 1; k <= a; k++) { // Vérifier que les batiment qui encadre la tuille sont occupé
-                                                       // par des colonie ou des villes
-                        for (int l = b - 1; l <= b; l++) {
-                            if(batiments[k][l] != null) {
-                                batiments[k][l].getProprietaire().ajouteCarteRessoure(tuiles[a][b].getRessource());// une
-                                                                                                                   // colonie
-                                                                                                                   // gagne
-                                                                                                                   // une
-                                                                                                                   // seule
-                                                                                                                   // carte
-                                if (batiments[k][l] instanceof Ville) {
+                    if(!tuiles[a][b].getVoleurPresent() && !tuiles[a][b].getNomTerrain().equals("Desert")){ // vérifier que la tuille n'est pas un desert 
+                                                                                                            // vérifier que le voleur n'est pas présent sur la tuile 
+                        for (int k = a - 1; k <= a; k++) { // Vérifier que les batiment qui encadre la tuille sont occupé
+                                                        // par des colonie ou des villes
+                            for (int l = b - 1; l <= b; l++) {
+                                if(batiments[k][l] != null) {
                                     batiments[k][l].getProprietaire().ajouteCarteRessoure(tuiles[a][b].getRessource());// une
-                                                                                                                       // ville
-                                                                                                                       // gagne
-                                                                                                                       // une
-                                                                                                                       // deuxième
-                                                                                                                       // carte
+                                                                                                                    // colonie
+                                                                                                                    // gagne
+                                                                                                                    // une
+                                                                                                                    // seule
+                                                                                                                    // carte
+                                    if (batiments[k][l] instanceof Ville) {
+                                        batiments[k][l].getProprietaire().ajouteCarteRessoure(tuiles[a][b].getRessource());// une
+                                                                                                                        // ville
+                                                                                                                        // gagne
+                                                                                                                        // une
+                                                                                                                        // deuxième
+                                                                                                                        // carte
+                                    }
                                 }
                             }
                         }
@@ -417,4 +418,5 @@ public class Plateau {
             }
         }
     }
+   
 }
