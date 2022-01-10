@@ -109,8 +109,10 @@ public class Plateau {
         System.out.println(
                 "          ****************************\n          *     L'île de Catane      *\n          ****************************");
         System.out.print("   ");
-        for (int i = 1; i < dimension+2; i++) {
-            System.out.print(alphabet.charAt(i)+"            ");
+        for (int i = 1; i < tabLength - 1; i++) {
+            System.out.print(alphabet.charAt(i));
+            if(i%2==1) System.out.print("     ");
+            if(i%2==0) System.out.print("      ");
         }
         System.out.println();
         for (int i = 1; i < tabLength - 1; i++) {
@@ -143,26 +145,29 @@ public class Plateau {
     public void ajouteRoute(int x, int y,int t,Joueur proprietaire) { //x,y,z : nombres contenus dans le tableau "int coord[]" qu'on renvoie après avoir demandé au joueur les coordonnées de la route
         switch (t) {
             case 1: // routeHorizontale
-                if(peutConstruireRoute(x-1, y, proprietaire)) 
+                if(peutConstruireRoute(x-1, y, t, proprietaire)){
                     routesH[x-1][y] = new Route(proprietaire, x-1, y);
                     return;
+                }
+                else{System.out.println("Construction de route impossible");return;}
             case 0:
-                if(peutConstruireRoute(x, y-1, proprietaire)) 
+                if(peutConstruireRoute(x, y-1, t, proprietaire)) {
                     routesV[x][y-1] = new Route(proprietaire, x, y-1);
                     return;
+                }
+                else{System.out.println("Construction de route impossible");return;}
             default:
-                System.out.println("Votre route n'est ni horizontale ni verticale. Très étrange!");
         }
         //Si on est arrivés ici c'est qu'une condition nous empêche de construire la route
-        System.out.println("Construction de route impossible");
     }
 
     public void ajouteColonie(int x, int y, Joueur proprietaire) {
         if (peutConstruireColonie(x, y, proprietaire)) {
             batiments[x][y] = new Colonie(x, y, proprietaire);
+            proprietaire.ajoutePoints(1);
             return;
         }
-        System.out.println("Impossible de construire de colonie");
+        System.out.println("Impossible de construire la colonie");
 
     }
 
@@ -217,24 +222,13 @@ public class Plateau {
                 || checkIfRouteAmie(j, routesV[x + 1][y]));
     }
 
-    public boolean pasDeBatimentsEnnemis_RV(int x, int y, Joueur j) {
-        // pour les routes verticales, on vérifie si il n'y a pas de batiments ennemis
-        // en haut et en bas
-        return (checkIfBatimentAmi(j, batiments[x][y+1]) && checkIfBatimentAmi(j, batiments[x+1][y+1]));
-    }
-
-    public boolean pasDeBatimentsEnnemis_RH(int x, int y, Joueur j) { // pour les routes horizontales, même principe
-                                                                      // sauf qu'on regarde à droite et à gauche
-
-        return (checkIfBatimentAmi(j, batiments[x+1][y], batiments[x+1][y+1]));
-    }
-
     public boolean checkIfBatimentAmi(Joueur proprietaire, Batiment... b) {
+        boolean batimentAmiPresent = false;
         for (int i = 0; i < b.length; i++) {
-            if (!(proprietaire.equals(b[i].getProprietaire()) || b[i].getProprietaire() == null))
-                return false;
+            if (proprietaire.equals(b[i].getProprietaire()))
+                batimentAmiPresent = true;
         }
-        return true;
+        return batimentAmiPresent;
     }
 
     // -----------------------Fonctions de vérifications pour la construction de
@@ -277,39 +271,43 @@ public class Plateau {
     }
 
     public boolean checkIfRouteAmie(Joueur j, Route... r) {
+        boolean routeAmiePresente = false;
         for (int i = 0; i < r.length; i++) {
-            if (!(j.equals(r[i].getProprietaire()) || r[i].getProprietaire() == null))
-                return false;
+            if ((j.equals(r[i].getProprietaire())))
+                routeAmiePresente = true;
         }
-        return true;
+        return routeAmiePresente;
     }
 
     // --------------------------Méthodes de vérifications
     // principales------------------------------- //
 
-    public boolean peutConstruireRoute(int x, int y, Joueur j) {
+    public boolean peutConstruireRoute(int x, int y,int t, Joueur j) { // t est un nombre "code" qui nous permets
+                                                                        //de savoir si la route qu'on veut construire est verticale ou horizontale
         if (routeHorsLimite(x, y))
             return false;
         if (routePresente(x, y))
             return false;
 
-        if (new Route(x, y).estRouteHorizontale()) {
-            return (routeAmieAProximite_RH(x, y, j) && pasDeBatimentsEnnemis_RH(x, y, j));
+        if (t==1) {
+            return (routeAmieAProximite_RH(x, y, j) || checkIfBatimentAmi(j, batiments[x+1][y], batiments[x+1][y+1]));
         }
         // si on est arrivé là c'est que la route est verticale
-        return (routeAmieAProximite_RV(x, y, j) && pasDeBatimentsEnnemis_RV(x, y, j));
+        return (routeAmieAProximite_RV(x, y, j) || checkIfBatimentAmi(j, batiments[x][y+1],batiments[x+1][y+1]));
     }
 
     public boolean peutConstruireColonie(int x, int y, Joueur j) {
-        if (batimentHorsLimite(x, y))
+        if (batimentHorsLimite(x, y)) return false;
+
+        if ( ColoniePresente(x, y) || !espaceDisponiblePourColonie(x, y)){
             return false;
-        if ( ColoniePresente(x, y) || !espaceDisponiblePourColonie(x, y))
-            return false;
-        return (checkIfRouteAmie(j, routesV[x-1][y-1], routesV[x][y-1], routesH[x-1][y-1], routesH[x-1][y + 1]));
+        }
+        // on regarde si une route amie est dispo pour construire notre route, sinon si on est en début de partie alors on peut poser la colonie, d'où la 2ème condition avec les points
+        return (checkIfRouteAmie(j, routesV[x-1][y-1], routesV[x][y-1], routesH[x-1][y-1], routesH[x-1][y]) || j.getNbpoints() < 2);
     }
 
     public boolean peutConstruireVille(int x, int y, Joueur j) {
-        return (!batimentHorsLimite(x, y) && ColoniePresente(x, y) && checkIfBatimentAmi(j, batiments[x][y]));
+        return (!batimentHorsLimite(x, y) && checkIfBatimentAmi(j, batiments[x][y]) && ColoniePresente(x, y) );
     }
 
     // ---------------------Autres fonctions nécessaires au jeu

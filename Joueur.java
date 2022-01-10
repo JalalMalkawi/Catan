@@ -113,6 +113,10 @@ public class Joueur {
         this.nbpoints = nbpoints;
     }
 
+    public void ajoutePoints(int points){
+        this.nbpoints += points;
+    }
+
     public void setDeck(ArrayList<ArrayList<Carte>> deck) {
         this.deck = deck;
     }
@@ -130,7 +134,7 @@ public class Joueur {
         System.out.println(q);
         return scanReponse.nextInt();
     }
-    private char demaderChar(String q){
+    private char demanderChar(String q){
         System.out.println(q);
         return scanReponse.next().charAt(0);
     }
@@ -143,7 +147,7 @@ public class Joueur {
     public int demanderDim(){
         return demanderInt("Donner la dimension du plateau");
     }
-    public int LancerDe(){
+    public int lancerDe(){
         Random r = new Random(); 
         int i=r.nextInt(6)+1;
         int j=r.nextInt(6)+1;
@@ -160,26 +164,36 @@ public class Joueur {
         return scanReponse.next().charAt(0);
     }
  
-    public int[] demanderCoordonneesBatiment() {
-        String coordonnees = demanderStr("Saisir les coordonnées d'une case (Ligne.Colonne)");
+    public int[] coordonneesBatiment() { // sortie : tableau int[] de la forme : [abscisse du batiment dans batiments[][]] [ordonnee dans batiments[][]]
+        String coordonnees = demanderStr("Saisir les coordonnées d'un batiment (Ligne.Colonne. Exemple : AA ou CC)");
         int[] coord = new int[2];
-        coord[0] = alphabet.indexOf(coordonnees.charAt(0)); 
-        coord[1] = Integer.parseInt( String.valueOf(coordonnees.charAt(1)));
+        while(!(alphabet.indexOf(coordonnees.charAt(0))%2==1 && alphabet.indexOf(coordonnees.charAt(1))%2==1)){
+            coordonnees = demanderStr("Veuillez saisir des coordonnees valides pour un batiment. Rappel du format : (Ligne.Colonne : Exemple : AA ou CC)");
+        } 
+        coord[0] = alphabetI.indexOf(coordonnees.charAt(0)); 
+        coord[1] = alphabetI.indexOf(coordonnees.charAt(0)); 
         return coord;
     }
-    public String demanderCordoneesRoute(){
-        return  demanderStr("Saisir les coordonnées d'une case (Ligne.Colonne)");
+
+    public String demanderCoordonneesRoute(){
+        return  demanderStr("Saisir les coordonnées d'une route (Ligne.Colonne : Exemple : AB ou BA ou bien FC )");
     }
-    //revoie les coordonné d'une route en fonction qu'elle soit verticale ou horizontale
-    //sortie :[abs dans routesV ou routesH][ord dans routesV ou routesH][nbr qui indique si c'est routesV ou routesH "ex: 1 pour routesV et 0 pr routesH"]
-    public int [] demanderCordonneesRoute(String coordonnees){
+
+    public boolean coordonneesRouteValides(String coord){
+        return (coord.charAt(0)%2==0 && coord.charAt(1)%2==0
+            ||coord.charAt(1)%2==0 && coord.charAt(0)%2==0
+        );
+    }
+    //renvoie les coordonné d'une route en fonction qu'elle soit verticale ou horizontale
+    //sortie :tableau int[] de la forme: int[abs dans routesV ou routesH][ord dans routesV ou routesH][nbr qui indique si c'est routesV ou routesH "ie: 0 pour routesV et 1 pr routesH"]
+    public int [] coordonneesRoute(){
+        String coordonnees = demanderCoordonneesRoute();
         int[] coord = new int[3];
-        if(alphabet.indexOf(coordonnees.charAt(0))%2==0){
-            coord[0] = alphabetP.indexOf(coordonnees.charAt(0)); 
-        }else{
-            coord[0] = alphabetI.indexOf(coordonnees.charAt(0)); 
+        while(!coordonneesRouteValides(coordonnees)){
+            coordonnees = demanderStr("Veuillez rentrer des coordonnees valides");
         }
-        coord[1] = Integer.parseInt( String.valueOf(coordonnees.charAt(1)));
+        coord[0] =(alphabet.indexOf(coordonnees.charAt(0))%2==0) ? alphabetP.indexOf(coordonnees.charAt(0)) : alphabetI.indexOf(coordonnees.charAt(0)); 
+        coord[1] = (alphabet.indexOf(coordonnees.charAt(1))%2==0) ? alphabetP.indexOf(coordonnees.charAt(1)) : alphabetI.indexOf(coordonnees.charAt(1));
         coord[2] = (coord[0] % 2 == 0) ? 1 : 0 ; // si coord[0] est pair, i.e si c'est une route verticale qu'on pose, alors on mets comme code le chiffre 0 (comme 0 modulo 2...). Autrement on mets 1 (route horizontale)
         return coord;
     }
@@ -191,7 +205,7 @@ public class Joueur {
     public void ajouteCarteDeve(Carte c){
         deck.get(0).add(c);
     }
-    public int nombbreMinerai(){
+    public int nombreMinerai(){
         int n=0;
         for(int i=0;i<deck.get(1).size();i++){
             if(deck.get(1).get(i).getNom().equalsIgnoreCase("minerai")){
@@ -200,7 +214,7 @@ public class Joueur {
         }
         return n;
     }
-    public int nombbrebois(){
+    public int nombreBois(){
         int n=0;
         for(int i=0;i<deck.get(1).size();i++){
             if(deck.get(1).get(i).getNom().equalsIgnoreCase("bois")){
@@ -209,7 +223,7 @@ public class Joueur {
         }
         return n;
     }
-    public int nombbreLaine(){
+    public int nombreLaine(){
         int n=0;
         for(int i=0;i<deck.get(1).size();i++){
             if(deck.get(1).get(i).getNom().equalsIgnoreCase("laine")){
@@ -218,7 +232,7 @@ public class Joueur {
         }
         return n;
     }
-    public int nombbreBle(){
+    public int nombreBle(){
         int n=0;
         for(int i=0;i<deck.get(1).size();i++){
             if(deck.get(1).get(i).getNom().equalsIgnoreCase("ble")){
@@ -227,7 +241,7 @@ public class Joueur {
         }
         return n;
     }
-    public int nombbreArgile(){
+    public int nombreArgile(){
         int n=0;
         for(int i=0;i<deck.get(1).size();i++){
             if(deck.get(1).get(i).getNom().equalsIgnoreCase("argile")){
@@ -238,18 +252,20 @@ public class Joueur {
     }
     //permet de savoir le nombre si le joueur a des resource nécessaire pour construire une route
     public boolean peutConstruireRoute(){
-        return (nombbrebois()>0 && nombbreArgile()>0);
+        return (nombreBois()>0 && nombreArgile()>0);
     }
     //permet de savoir le nombre si le joueur a des resource nécessaire pour construire une Colonie
     public boolean peutConstruireColonie(){
-        return (nombbrebois()>0 && nombbreArgile()>0 && nombbreBle()>0 && nombbreLaine()>0);
+        return (nombreBois()>0 && nombreArgile()>0 && nombreBle()>0 && nombreLaine()>0);
     }
     //permet de savoir le nombre si le joueur a des resource nécessaire pour construire une ville
+
     public boolean peutConstruireVille(){
-        return (nombbreBle()>1 && nombbreMinerai()>2);
+        return (nombreBle()>1 && nombreMinerai()>2);
     }
+
     public boolean peutAcheterCarteDevelloppement(){
-        return (nombbreMinerai()>0 && nombbreBle()>0 && nombbreLaine()>0);
+        return (nombreMinerai()>0 && nombreBle()>0 && nombreLaine()>0);
     }
     
 }
