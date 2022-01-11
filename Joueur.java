@@ -20,7 +20,7 @@ public class Joueur {
     private char route;//le caractère avec lequel on va représenter les routes du joueur
     private String ville;// idem mais pour les villes
     private String colonie;
-    private int nbrechevalierjouer;
+    private int nbreChevalierJouer;
     //couleurs pour l'affichage des routes,colonies... du joueur
     
     public static final String RESET = "\u001B[0m";
@@ -47,21 +47,22 @@ public class Joueur {
         ArrayList<Carte> CarteRessource=new ArrayList<Carte>();
         deck.add(CarteDeveloppement);
         deck.add(CarteRessource);
-        nbrechevalierjouer=0;
+        nbreChevalierJouer=0;
+       
     }
 
 
     //---------------Getters et setters-------------------
-    public int getNbrechevalierjouer(){
-        return nbrechevalierjouer;
+    public int getNbreChevalierJouer() {
+        return nbreChevalierJouer;
     }
-    public void setNbrechevalierjouer(int x){
-        nbrechevalierjouer=x;
+    public void setNbreChevalierJouer() {
+        nbreChevalierJouer +=1;
     }
     public char getRoute() {
        return route;
     }
-
+    
     public String getColonie() {
         return colonie;
     }
@@ -170,7 +171,8 @@ public class Joueur {
         System.out.println("(4) Construire une Colonie");
         System.out.println("(5) jouer une carte Chevalier");
         System.out.println("(6) acheter une carte developpement");
-        System.out.println("(7) faire un échange");
+        System.out.println("(7) Consultez vos ressources");
+        System.out.println("(8) faire un échange");
         return scanReponse.nextInt();
     }
  
@@ -354,6 +356,44 @@ public class Joueur {
             System.out.println("désoler ce joueur n'est pas présent sur le plateau ");
         }   
     }
-    //elle revoi le nom du joueur qui a l'armé la plus puissante;
-    
+    public void afficheRessoure(){
+        System.out.println("*******************************************");
+        System.out.println("Vois si les ressources dont vous disposer");
+        System.out.println(" Bois     :"+nombreBois());
+        System.out.println(" Argile   :"+nombreArgile());
+        System.out.println(" Laine    :"+nombreLaine());
+        System.out.println(" Ble      :"+nombreBle());
+        System.out.println(" Minerai  :"+nombreMinerai());
+    }
+   
+    public int nombrechevalier(){
+        int n=0;
+        for(int i=0;i<deck.get(0).size();i++){
+            if(deck.get(1).get(i).getNom().equalsIgnoreCase("chevalier")){
+                n++;
+            }
+        }
+        return n;
+    }
+    //verifier qu' aucun joueur ne dispose de l'étique l'armé la plus puissante
+    public boolean ArmePPuissante(Joueur [] tab ){
+        for( int i=0;i<tab.length;i++){
+            if(tab[i].armeeLaPlusPuissante){
+                return true;
+            }
+        }
+        return false;
+    }
+    //affecte l'étiquertte de l'armé la plus puissante au premier joueur qui a 3 carte chevalier
+    public void ArmeLaplusPuissante(Joueur [] tab ){
+        if(!ArmePPuissante(tab)){
+            for( int i=0;i<tab.length;i++){
+                if(tab[i].nombrechevalier()>=3){
+                    tab[i].armeeLaPlusPuissante=true;
+                    nbpoints+=2;
+                    return ;
+                }
+            }
+        }
+    }
 }

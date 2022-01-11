@@ -100,8 +100,6 @@ public class Plateau {
         }
     }
 
-
-
     public void afficheTabR() {
         int tabLength = routesV.length + routesH.length;
         int subTabLength = routesV[0].length;
