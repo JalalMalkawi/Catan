@@ -20,6 +20,7 @@ public class Joueur {
     private char route;//le caractère avec lequel on va représenter les routes du joueur
     private String ville;// idem mais pour les villes
     private String colonie;
+    private int nbrechevalierjouer;
     //couleurs pour l'affichage des routes,colonies... du joueur
     
     public static final String RESET = "\u001B[0m";
@@ -46,10 +47,17 @@ public class Joueur {
         ArrayList<Carte> CarteRessource=new ArrayList<Carte>();
         deck.add(CarteDeveloppement);
         deck.add(CarteRessource);
+        nbrechevalierjouer=0;
     }
 
 
     //---------------Getters et setters-------------------
+    public int getNbrechevalierjouer(){
+        return nbrechevalierjouer;
+    }
+    public void setNbrechevalierjouer(int x){
+        nbrechevalierjouer=x;
+    }
     public char getRoute() {
        return route;
     }
@@ -127,7 +135,7 @@ public class Joueur {
     public void finish(){
         scanReponse.close();
     }
-    private String demanderStr(String q){
+    public String demanderStr(String q){
         System.out.println(q);
         return scanReponse.next();
     }
@@ -286,7 +294,6 @@ public class Joueur {
        int x=demanderInt("1-bois \n2-argile\n3-laine\n4-ble\5-minerai");
         ajouteCarteRessoure(new Carte(tab[x]));
     }
-
     public void volercarte(Joueur j){
         Random r=new Random();
         int x=r.nextInt(j.getDeck().get(1).size());
@@ -294,5 +301,59 @@ public class Joueur {
         j.getDeck().get(1).remove(j.getDeck().get(1).get(x));
         this.ajouteCarteRessoure(c);
     }
+    public boolean cartePresent(Carte c){
+        for(int i=0;i<deck.get(1).size();i++){
+            if(deck.get(1).get(i).getClass().equals(c.getNom())){
+                return true;
+            }
+        }
+        return false;
+    }
+    public void perdrecarte(Joueur [] tab){
+        for(int i=0;i<tab.length;i++){
+            if(tab[i].deck.get(1).size()>7){
+                int n=tab[i].deck.get(1).size()/2;
+                while(n>0){
+                    String st=demanderStr("Donnez le nom de la carte que vous perdre");
+                    Carte c=new Carte(st.toLowerCase());
+                    if(cartePresent(c)){
+                        suprimerCarte(c, 1);
+                    }
+                    n--;
+                }
+            }
+        }
+    }
+    public void monopole(Carte c, Joueur [] tab){
+        for(int i=0;i<tab.length;i++){
+            if(!tab[i].getName().equals(this.name)){
+                if(tab[i].cartePresent(c)){
+                    for(int j=0;j<tab[i].deck.get(1).size();i++){
+                        this.ajouteCarteRessoure(c);
+                        tab[i].suprimerCarte(c, 1);
+                    }
+                }
+            }
+        }
+    }
+    public void volercarte(Plateau plato, int []gre){
+        String st=demanderStr("Donner le nom du jouer que vous voulez volez");
+        if(plato.joueurPresent(st)){
+            int z=1;
+            while(z>0){// cette boucle me permet de m'assurer que le joueur a voler une cart
+                for (int k = gre[0]-1; k <= gre[0]; k++) { 
+                    for (int l = gre[1] - 1; l <= gre[1]; l++) {
+                       if(plato.getBatiments()[k][l].getProprietaire().getName().equalsIgnoreCase(st)) {
+                            volercarte(plato.getBatiments()[k][l].getProprietaire());
+                            z--;
+                        }
+                    }
+                }
+            }
+        }else{
+            System.out.println("désoler ce joueur n'est pas présent sur le plateau ");
+        }   
+    }
+    //elle revoi le nom du joueur qui a l'armé la plus puissante;
     
 }

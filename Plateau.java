@@ -30,7 +30,9 @@ public class Plateau {
         initialiseTuiles();
         terrainsEtNumerosAlea();
     }
-
+    public Joueur[] getJoueurs() {
+        return joueurs;
+    }
     public Batiment[][] getBatiments() {
         return batiments;
     }
@@ -415,6 +417,14 @@ public class Plateau {
                 }
             }
         }
+    }
+    public boolean joueurPresent(String n){
+        for(int i=0;i<joueurs.length;i++){
+            if(joueurs[i].getName().equalsIgnoreCase(n)){
+                return true;
+            }
+        }
+        return false;
     }
    
 }

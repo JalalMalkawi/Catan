@@ -2,31 +2,19 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Jeu {
-    // private Joueur[] participants;
-    // private Plateau plato;
-
-    // public Jeu(Joueur[] j, Plateau p) {
-    //     this.participants = j;
-    //     this.plato = p;
-    // }
+    
     private Joueur joueur;
     private Plateau plato;
-    int nbredeChevalierjoué;
+    
     
     public Jeu(Joueur j, Plateau p){
         joueur=j;
         plato=p;
-        nbredeChevalierjoué=0;
     } 
 
-    public void jeu(){
-        System.out.println("(1) Lancer les dès");
-        System.out.println("(2) Construire une route");
-        System.out.println("(3) Construire une ville");
-        System.out.println("(4) Construire une Colonie");
-        System.out.println("(5) jouer une carte Chevalier");
-        System.out.println("(6) acheter une carte developpement");
-        System.out.println("(7) faire un échange");
+    
+    public void jeu(Joueur[] participants){
+       // Joueur joueur=participants[i];
         while(joueur.veutJouer()){
             int x= joueur.demanderAction();
             switch(x){
@@ -42,8 +30,8 @@ public class Jeu {
                             tab=joueur.demadeCordoneesVoleur();
                         }
                         plato.getTuiles()[tab[0]][tab[1]].setVoleurPresent(true);
-                        //tu dois coder la methode pour voler une carte d'un joueur proche de la tuile ou tu vient de placer le volleur
-
+                        joueur.perdrecarte(participants);//tous les joueur qui on plus de 7 carte vont perdre la motié de leur carte    
+                        joueur.volercarte(plato, tab);//voler une carte d'un joueur proche de la tuile ou tu vient de placer le volleur
                     }
                 break;
                 case 2:
@@ -67,7 +55,6 @@ public class Jeu {
                             plato.ajouteVille(tab[0], tab[1], joueur);// construcion de la ville
                             joueur.suprimerCarte(new Carte("ble"),2);// supression des ressource utiliser 
                             joueur.suprimerCarte(new Carte("minerai"),3);//par le  joueur pour la construction
-                           joueur.setNbpoints(joueur.getNbpoints()+1);//incrementer le nmbr de point de victoire
                         }else{
                             System.out.println("Vous ne pouvez pas construire une ville au coordonné indiqué");
                         }
@@ -84,7 +71,6 @@ public class Jeu {
                             joueur.suprimerCarte(new Carte("argile"), 1);//pour la construction
                             joueur.suprimerCarte(new Carte("ble"), 1);
                             joueur.suprimerCarte(new Carte("laine"), 1);
-                            joueur.setNbpoints(joueur.getNbpoints()+1);//incrementer le nmbr de point de victoire
                         }else{
                             System.out.println("Vous ne pouvez pas construire une colonie au coordonné indiqué");
                         }
@@ -95,14 +81,15 @@ public class Jeu {
                 case 5: //jouer la carte chevalier;
                     //deplacer le voleur 
                     int []gre=joueur.demadeCordoneesVoleur();
-                        while(plato.getTuiles()[gre[0]][gre[1]].getVoleurPresent()){
-                            System.out.println("impossible :le voleur est déja present sur cette tuille \n ");
-                            gre=joueur.demadeCordoneesVoleur();
-                        }
-                        plato.getTuiles()[gre[0]][gre[1]].setVoleurPresent(true);
-                    nbredeChevalierjoué++; 
-                    //voler la carte d'un joueur
-                    
+                    while(plato.getTuiles()[gre[0]][gre[1]].getVoleurPresent()){
+                        System.out.println("impossible :le voleur est déja present sur cette tuille \n ");
+                        gre=joueur.demadeCordoneesVoleur();
+                    }
+                    plato.getTuiles()[gre[0]][gre[1]].setVoleurPresent(true);
+                    joueur.setNbrechevalierjouer(joueur.getNbrechevalierjouer()+1);
+                        //voler la carte d'un joueur
+                    joueur.volercarte(plato, gre);    
+                        
 
                 break;
                 case 6:// acheter une carte devellopement
@@ -128,7 +115,8 @@ public class Jeu {
                                   c--;
                                 }
                             }else if(a==3){
-
+                                String carte=joueur.demanderStr("Donner le nom de la ressource dont vous vooulez avoir le monopole");
+                                joueur.monopole(new Carte(carte.toLowerCase()), participants);
                             }else{
                                 joueur.ajouteCarteDeve(new CarteDeDeveloppement(dev[a], 1));
                                 joueur.setNbpoints(joueur.getNbpoints()+1);
