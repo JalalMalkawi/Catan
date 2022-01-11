@@ -134,7 +134,7 @@ public class Jeu {
                                 joueur.setNbpoints(joueur.getNbpoints()+1);
                             }
                         }else{
-                            System.out.println("Desolé vous n'avez pas assez de ressource pour acheter une carte develloppement");
+                            System.out.println("Desolé vous n'avez pas assez de ressource pour acheter une carte développement");
                         }
                 break;
                 case 7: //faire un echange 
