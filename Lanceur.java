@@ -10,11 +10,13 @@ public class Lanceur {
 
         p.ajouteColonie(2, 2, j);
 
-        p.ajouteColonie(2, 5, j);
+        //p.ajouteColonie(2, 5, j);
         p.ajouteRoute(2, 2, 0, j);
         p.ajouteRoute(3, 2, 1, j);
+        p.ajouteRoute(3, 3, 0, j);
 
-        p.ajouteRoute(4, 1, 1, j);
+        p.ajouteRoute(4, 2, 1, j);
+        //p.ajouteColonie(4, 3, j);
 
         // p.ajouteColonie(1, 1, j);
         // p.ajouteColonie(5, 1, j);
