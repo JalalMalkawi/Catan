@@ -7,9 +7,9 @@ import javax.management.relation.RelationTypeNotFoundException;
 
 
 public class Joueur {
-    String alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    String alphabetI="-ACEGIKMOQSUWY"; // lettres aux positions impaires dans l'alphabet
-    String alphabetP="-BDFHJLNPRTVXZ"; // lettres aux positions paires
+    public static String alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    public static String alphabetI="-ACEGIKMOQSUWY"; // lettres aux positions impaires dans l'alphabet
+    public static String alphabetP="-BDFHJLNPRTVXZ"; // lettres aux positions paires
     private String name;
     private String type;
     private int nbpoints;
@@ -140,7 +140,7 @@ public class Joueur {
         return scanReponse.next().charAt(0);
     }
     public boolean veutJouer(){
-        return (demanderStr("Voulez vous jouer oui/non").equalsIgnoreCase("oui"));
+        return (demanderStr("Voulez vous effectuer une autre action? (oui/non)").equalsIgnoreCase("oui"));
     }
     public String demanderNom(){
         return demanderStr("Donnez votre nom");
@@ -199,12 +199,17 @@ public class Joueur {
         coord[2] = (coord[0] % 2 == 0) ? 1 : 0 ; // si coord[0] est pair, i.e si c'est une route verticale qu'on pose, alors on mets comme code le chiffre 0 (comme 0 modulo 2...). Autrement on mets 1 (route horizontale)
         return coord;
     }
-    public int [] demadeCordoneesVoleur(){
-        String coordonnees = demanderStr("Saisir les coordonnées du Batiment a placé (Ligne.Colonne)");
+    public int [] demandeCoordonneesVoleur(){
+        String coordonnees = demanderStr("Saisir les coordonnées de la tuile où vous voulez placer le voleur (Ligne.Colonne : Exemple : BB ou bien HD )");
         int[] coord = new int[2];
         coord[0] = alphabetP.indexOf(coordonnees.charAt(0)); 
-        coord[1]=alphabetP.indexOf(coordonnees.charAt(1));;
+        coord[1]=alphabetP.indexOf(coordonnees.charAt(1));
         return coord;
+    }
+ 
+
+    public int demandeNbJoueurs(){
+        return demanderInt("Bienvenue ! Combien de joueurs vont-ils participer ?");
     }
 
     public void ajouteCarteRessoure(Carte c){
@@ -267,13 +272,13 @@ public class Joueur {
     public boolean peutConstruireColonie(){
         return (nombreBois()>0 && nombreArgile()>0 && nombreBle()>0 && nombreLaine()>0);
     }
-    //permet de savoir le nombre si le joueur a des resource nécessaire pour construire une ville
+    //permet de savoir le nombre si le joueur a des ressources nécessaires pour construire une ville
 
     public boolean peutConstruireVille(){
         return (nombreBle()>1 && nombreMinerai()>2);
     }
 
-    public boolean peutAcheterCarteDevelloppement(){
+    public boolean peutAcheterCarteDeveloppement(){
         return (nombreMinerai()>0 && nombreBle()>0 && nombreLaine()>0);
     }
     public void suprimerCarte(Carte c, int n){

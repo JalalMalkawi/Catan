@@ -6,7 +6,7 @@ public class Plateau {
     private Route[][] routesV; // routes Verticales
     private Route[][] routesH; // routes Horizontales
     private Batiment[][] batiments; // les colonies et les villes
-    String alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    public static String alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private Joueur[] joueurs; // TODO: Trouver une solution pour ne pas avoir deux joueurs identiques (ayant
                               // le même nom), exemple : utiliser un Set
 
@@ -15,7 +15,7 @@ public class Plateau {
 
     public Plateau(int dim, int nbrjoueur) {
         dimension = dim;
-        tuiles = new Tuile[dimension + 2][dimension + 2];
+        tuiles = new Tuile[dimension + 2][dimension + 2]; // on stocke le plateau aux mêmes positions que batiments[][] (voir ci-dessous)
         batiments = new Batiment[dimension + 3][dimension + 3]; // on stocke le plateau aux indices (1,1) à
                                                                 // (dimension+1,dimension+1)
         routesV = new Route[dimension + 2][dimension + 1]; // 2 lignes de routes verticales en plus pour les méthodes
@@ -98,6 +98,10 @@ public class Plateau {
         }
     }
 
+    public boolean tuileHorsLimite(int x, int y){
+        return (x < 0 || x > dimension + 1 || y < 0 || y > dimension + 1);
+    }
+
 
 
     public void afficheTabR() {
@@ -174,6 +178,7 @@ public class Plateau {
     public void ajouteVille(int x, int y, Joueur proprietaire) {
         if (peutConstruireVille(x, y, proprietaire)) {
             batiments[x][y] = new Ville(x, y, proprietaire);
+            proprietaire.ajoutePoints(2);
             return;
         }
         System.out.println("Impossible de construire de ville");
@@ -382,39 +387,31 @@ public class Plateau {
         }
         return n;
     }
-    public void getRoussource(int x) {
-        for (int i = 1; i < tuiles.length - 1; i++) {
-            for (int j = 1; j < tuiles[0].length - 1; j++) {
-                if (tuiles[i][j].getNumero() == x) { // Verifier si la tuille porte le numéro donner en argument;
-                    int a = tuiles[i][j].getAbscisse();
-                    int b = tuiles[i][j].getOrdonnee();
-                    if(!tuiles[a][b].getVoleurPresent() && !tuiles[a][b].getNomTerrain().equals("Desert")){ // vérifier que la tuille n'est pas un desert 
-                                                                                                            // vérifier que le voleur n'est pas présent sur la tuile 
-                        for (int k = a - 1; k <= a; k++) { // Vérifier que les batiment qui encadre la tuille sont occupé
-                                                        // par des colonie ou des villes
-                            for (int l = b - 1; l <= b; l++) {
-                                if(batiments[k][l] != null) {
-                                    batiments[k][l].getProprietaire().ajouteCarteRessoure(tuiles[a][b].getRessource());// une
-                                                                                                                    // colonie
-                                                                                                                    // gagne
-                                                                                                                    // une
-                                                                                                                    // seule
-                                                                                                                    // carte
-                                    if (batiments[k][l] instanceof Ville) {
-                                        batiments[k][l].getProprietaire().ajouteCarteRessoure(tuiles[a][b].getRessource());// une
-                                                                                                                        // ville
-                                                                                                                        // gagne
-                                                                                                                        // une
-                                                                                                                        // deuxième
-                                                                                                                        // carte
-                                    }
-                                }
-                            }
-                        }
+
+    public void donneRessourcesTuile(int absTuile,int ordTuile){
+        for (int k = absTuile; k <= absTuile+1; k++) { // On parcourt le carré de tuiles dans le tableau batiments[][] afin de distribuer les ressources aux joueurs installés aux intersections environnantes
+            for (int l = ordTuile; l <= ordTuile+1; l++) {
+                if(batiments[k][l] != null) {
+                    batiments[k][l].getProprietaire().ajouteCarteRessoure(tuiles[absTuile][ordTuile].getRessource());// une colonie fait gagner une seule carte
+                    if (batiments[k][l] instanceof Ville) {
+                        batiments[k][l].getProprietaire().ajouteCarteRessoure(tuiles[absTuile][ordTuile].getRessource());// une ville fait gagner une deuxième carte
                     }
                 }
             }
         }
     }
-   
+
+    public void distribueRessources(int x) { // On parcourt le tableau de tuiles pour distribuer les ressources correspondantes aux tuiles dont le numéro a été obtenu aux dés 
+        for (int i = 1; i < tuiles.length - 1; i++) { 
+            for (int j = 1; j < tuiles[0].length - 1; j++) {
+                if (tuiles[i][j].getNumero() == x) { // On verifie si la tuile porte le numéro donné en argument (nombre obtenu aux dés);
+                    int a = tuiles[i][j].getAbscisse();
+                    int b = tuiles[i][j].getOrdonnee();
+                    if(!tuiles[a][b].getVoleurPresent() && !tuiles[a][b].getNomTerrain().equals("Desert")){ 
+                        donneRessourcesTuile(a,b);      
+                    }
+                }
+            }
+        }
+    }
 }
