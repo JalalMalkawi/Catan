@@ -30,7 +30,9 @@ public class Plateau {
         initialiseTuiles();
         terrainsEtNumerosAlea();
     }
-
+    public Joueur[] getJoueurs() {
+        return joueurs;
+    }
     public Batiment[][] getBatiments() {
         return batiments;
     }
@@ -98,11 +100,10 @@ public class Plateau {
         }
     }
 
+
     public boolean tuileHorsLimite(int x, int y){
         return (x < 0 || x > dimension + 1 || y < 0 || y > dimension + 1);
     }
-
-
 
     public void afficheTabR() {
         int tabLength = routesV.length + routesH.length;
@@ -414,4 +415,13 @@ public class Plateau {
             }
         }
     }
+    public boolean joueurPresent(String n){
+        for(int i=0;i<joueurs.length;i++){
+            if(joueurs[i].getName().equalsIgnoreCase(n)){
+                return true;
+            }
+        }
+        return false;
+    }
+   
 }

@@ -3,11 +3,10 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-import javax.management.relation.RelationTypeNotFoundException;
+
 
 
 public class Joueur {
-    public static String alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public static String alphabetI="-ACEGIKMOQSUWY"; // lettres aux positions impaires dans l'alphabet
     public static String alphabetP="-BDFHJLNPRTVXZ"; // lettres aux positions paires
     private String name;
@@ -20,6 +19,8 @@ public class Joueur {
     private char route;//le caractère avec lequel on va représenter les routes du joueur
     private String ville;// idem mais pour les villes
     private String colonie;
+    private int nbreChevalierJouer;
+    private boolean desLances;
     //couleurs pour l'affichage des routes,colonies... du joueur
     
     public static final String RESET = "\u001B[0m";
@@ -46,14 +47,22 @@ public class Joueur {
         ArrayList<Carte> CarteRessource=new ArrayList<Carte>();
         deck.add(CarteDeveloppement);
         deck.add(CarteRessource);
+        nbreChevalierJouer=0;
+       
     }
 
 
     //---------------Getters et setters-------------------
+    public int getNbreChevalierJouer() {
+        return nbreChevalierJouer;
+    }
+    public void setNbreChevalierJouer() {
+        nbreChevalierJouer +=1;
+    }
     public char getRoute() {
        return route;
     }
-
+    
     public String getColonie() {
         return colonie;
     }
@@ -65,6 +74,12 @@ public class Joueur {
     public String getType() {
         return type;
     }
+
+    public void setDesLances(boolean desLances) {
+        this.desLances = desLances;
+    }
+
+    
 
     public int getNbpoints() {
         return nbpoints;
@@ -121,13 +136,17 @@ public class Joueur {
     public void setDeck(ArrayList<ArrayList<Carte>> deck) {
         this.deck = deck;
     }
+
+    public boolean getDesLances(){
+        return desLances;
+    }
     //--------------------
 
 
     public void finish(){
         scanReponse.close();
     }
-    private String demanderStr(String q){
+    public String demanderStr(String q){
         System.out.println(q);
         return scanReponse.next();
     }
@@ -162,14 +181,16 @@ public class Joueur {
         System.out.println("(4) Construire une Colonie");
         System.out.println("(5) jouer une carte Chevalier");
         System.out.println("(6) acheter une carte developpement");
-        System.out.println("(7) faire un échange");
+        System.out.println("(7) Consultez vos ressources");
+        System.out.println("(8) faire un échange");
+        System.out.println("(9) passer son tour");
         return scanReponse.nextInt();
     }
  
     public int[] demanderCoordonneesBatiment() { // sortie : tableau int[] de la forme : [abscisse du batiment dans batiments[][]] [ordonnee dans batiments[][]]
         String coordonnees = demanderStr("Saisir les coordonnées d'un batiment (Ligne.Colonne. Exemple : AA ou CC)");
         int[] coord = new int[2];
-        while(!(alphabet.indexOf(coordonnees.charAt(0))%2==1 && alphabet.indexOf(coordonnees.charAt(1))%2==1)){
+        while(!(Plateau.alphabet.indexOf(coordonnees.charAt(0))%2==1 && Plateau.alphabet.indexOf(coordonnees.charAt(1))%2==1)){
             coordonnees = demanderStr("Veuillez saisir des coordonnees valides pour un batiment. Rappel du format : (Ligne.Colonne : Exemple : AA ou CC)");
         } 
         coord[0] = alphabetI.indexOf(coordonnees.charAt(0)); 
@@ -194,8 +215,8 @@ public class Joueur {
         while(!coordonneesRouteValides(coordonnees)){
             coordonnees = demanderStr("Veuillez rentrer des coordonnees valides");
         }
-        coord[0] =(alphabet.indexOf(coordonnees.charAt(0))%2==0) ? alphabetP.indexOf(coordonnees.charAt(0)) : alphabetI.indexOf(coordonnees.charAt(0)); 
-        coord[1] = (alphabet.indexOf(coordonnees.charAt(1))%2==0) ? alphabetP.indexOf(coordonnees.charAt(1)) : alphabetI.indexOf(coordonnees.charAt(1));
+        coord[0] =(Plateau.alphabet.indexOf(coordonnees.charAt(0))%2==0) ? alphabetP.indexOf(coordonnees.charAt(0)) : alphabetI.indexOf(coordonnees.charAt(0)); 
+        coord[1] = (Plateau.alphabet.indexOf(coordonnees.charAt(1))%2==0) ? alphabetP.indexOf(coordonnees.charAt(1)) : alphabetI.indexOf(coordonnees.charAt(1));
         coord[2] = (coord[0] % 2 == 0) ? 1 : 0 ; // si coord[0] est pair, i.e si c'est une route verticale qu'on pose, alors on mets comme code le chiffre 0 (comme 0 modulo 2...). Autrement on mets 1 (route horizontale)
         return coord;
     }
@@ -264,6 +285,11 @@ public class Joueur {
         }
         return n;
     }
+
+    public boolean coordonneesValides(String coord){ // que ce soit une route ou un bâtiment, les coordonnees doivent être sous la forme suivante : <lettre de l'alphabet><lettre de l'alphabet>
+        return Plateau.alphabet.contains(coord.charAt(0)+"") && Plateau.alphabet.contains(coord.charAt(1)+"");
+    }
+
     //permet de savoir le nombre si le joueur a des resource nécessaire pour construire une route
     public boolean peutConstruireRoute(){
         return (nombreBois()>0 && nombreArgile()>0);
@@ -287,8 +313,8 @@ public class Joueur {
         }   
     }
     public void invention(){
-       String [] tab={"bois","argile","laine","ble","minerai"};
-       int x=demanderInt("1-bois \n2-argile\n3-laine\n4-ble\5-minerai");
+        String [] tab={"bois","argile","laine","ble","minerai"};
+        int x = demanderInt("1-bois \n2-argile\n3-laine\n4-ble\5-minerai");
         ajouteCarteRessoure(new Carte(tab[x]));
     }
 
@@ -299,5 +325,96 @@ public class Joueur {
         j.getDeck().get(1).remove(j.getDeck().get(1).get(x));
         this.ajouteCarteRessoure(c);
     }
+    public boolean cartePresent(Carte c){
+        for(int i=0;i<deck.get(1).size();i++){
+            if(deck.get(1).get(i).getClass().getName().equals(c.getNom())){
+                return true;
+            }
+        }
+        return false;
+    }
+    public void perdrecarte(Joueur [] tab){
+        for(int i=0;i<tab.length;i++){
+            if(tab[i].deck.get(1).size()>7){
+                int n=(tab[i].deck.get(1).size())/2;
+                while(n>0){
+                    String st=demanderStr("Donnez le nom de la carte que vous voulez laisser au voleur");
+                    Carte c=new Carte(st.toLowerCase());
+                    if(cartePresent(c)){
+                        suprimerCarte(c, 1);
+                    }
+                    n--;
+                }
+            }
+        }
+    }
+    public void monopole(Carte c, Joueur [] tab){
+        for(int i=0;i<tab.length;i++){
+            if(!tab[i].getName().equals(this.name) && tab[i].cartePresent(c)){
+                for(int j=0;j<tab[i].deck.get(1).size();i++){
+                    this.ajouteCarteRessoure(c);
+                    tab[i].suprimerCarte(c, 1);
+                }
+            }
+        }
+    }
     
+    public void volercarte(Plateau plato, int []gre){
+        String st=demanderStr("Donner le nom du jouer que vous voulez volez");
+        if(plato.joueurPresent(st)){
+            int z=1;
+            while(z>0){// cette boucle me permet de m'assurer que le joueur a voler une cart
+                for (int k = gre[0]-1; k <= gre[0]; k++) { 
+                    for (int l = gre[1] - 1; l <= gre[1]; l++) {
+                       if(plato.getBatiments()[k][l].getProprietaire().getName().equalsIgnoreCase(st)) {
+                            volercarte(plato.getBatiments()[k][l].getProprietaire());
+                            z--;
+                        }
+                    }
+                }
+            }
+        }else{
+            System.out.println("désoler ce joueur n'est pas présent sur le plateau ");
+        }   
+    }
+    public void afficheRessoure(){
+        System.out.println("*******************************************");
+        System.out.println("Voici les ressources dont vous disposez");
+        System.out.println(" Bois     :"+nombreBois());
+        System.out.println(" Argile   :"+nombreArgile());
+        System.out.println(" Laine    :"+nombreLaine());
+        System.out.println(" Ble      :"+nombreBle());
+        System.out.println(" Minerai  :"+nombreMinerai());
+    }
+   
+    public int nombrechevalier(){
+        int n=0;
+        for(int i=0;i<deck.get(0).size();i++){
+            if(deck.get(1).get(i).getNom().equalsIgnoreCase("chevalier")){
+                n++;
+            }
+        }
+        return n;
+    }
+    //verifier qu'aucun joueur ne dispose de l'étiquette Armée la plus puissante
+    public boolean ArmePPuissante(Joueur [] tab ){
+        for( int i=0;i<tab.length;i++){
+            if(tab[i].armeeLaPlusPuissante){
+                return true;
+            }
+        }
+        return false;
+    }
+    //affecte l'étiquette de l'armé la plus puissante au premier joueur qui a 3 carte chevalier
+    public void armeeLaplusPuissante(Joueur [] tab ){
+        if(!ArmePPuissante(tab)){
+            for( int i=0;i<tab.length;i++){
+                if(tab[i].nombrechevalier()>=3){
+                    tab[i].armeeLaPlusPuissante=true;
+                    nbpoints+=2;
+                    return ;
+                }
+            }
+        }
+    }
 }
