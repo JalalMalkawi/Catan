@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -13,7 +14,7 @@ public class Jeu {
     } 
 
     public void tour(){    
-        Joueur[] participants=plato.getJoueurs();
+        ArrayList<Joueur> participants=plato.getJoueurs();
         while(joueur.veutJouer()){
             int action= joueur.demanderAction();
             switch(action){
@@ -45,7 +46,7 @@ public class Jeu {
                 break;
                 case 2:
                     if(joueur.peutConstruireRoute()){   // verifie si le joueur a les ressource nécéssaire pour construire une route
-                       int [] coordonneesRoute =joueur.demanderCordonneesRoute(); // on demande les coordonné de la route
+                       int [] coordonneesRoute =joueur.demanderCoordonneesRoute(); // on demande les coordonné de la route
                        if(plato.peutConstruireRoute(coordonneesRoute[0], coordonneesRoute[1], coordonneesRoute[2], joueur)){ //on vérifier s'il es possible de construire une route au coordonné donné
                                plato.ajouteRoute(coordonneesRoute [0], coordonneesRoute[1], coordonneesRoute[3],joueur); //construction de la route
                                joueur.suprimerCarte(new Carte("bois"),1);   //supression des ressource utilisé 
@@ -103,7 +104,7 @@ public class Jeu {
                         System.out.println("Désolé vous avez jouez tous vos carte chevalier");
                     }
                 break;
-                case 6:// acheter une carte developement
+                case 6:// acheter une carte developpement
                         if(joueur.peutAcheterCarteDeveloppement()){
                             System.out.println("Vous avez les ressource nécessaire pour acheter une carte devellopement");
                             String [] dev={"chevalier","Construire 2 route","invention","Monopole","bibiotheque","place du marché","parlement","université"};
@@ -116,7 +117,7 @@ public class Jeu {
                                 int b=2;
                                 while(b>0){
                                     System.out.println("Bravo vous venez de gagné une carte progée qui vous donne la possibilité de construire deux route gratuitement\n");
-                                    int [] coordonnesVoleur =joueur.demanderCordonneesRoute(); 
+                                    int [] coordonnesVoleur =joueur.demanderCoordonneesRoute(); 
                                     if(plato.peutConstruireRoute(coordonnesVoleur [0], coordonnesVoleur [1], coordonnesVoleur [2], joueur)){ 
                                         plato.ajouteRoute(coordonnesVoleur [0], coordonnesVoleur [1], coordonnesVoleur [3],joueur); 
                                         b--;

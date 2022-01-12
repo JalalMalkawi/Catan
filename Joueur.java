@@ -1,4 +1,3 @@
-import java.nio.charset.CoderResult;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -15,8 +14,8 @@ public class Joueur {
     private ArrayList<ArrayList<Carte>> deck;
     private boolean armeeLaPlusPuissante;
     private boolean routeLaPlusLongue;
-    private Scanner scanReponse;
-    private char route;//le caractère avec lequel on va représenter les routes du joueur
+    private static Scanner scanReponse = new Scanner(System.in);
+    private String route;//le caractère avec lequel on va représenter les routes du joueur
     private String ville;// idem mais pour les villes
     private String colonie;
     private int nbreChevalierJouer;
@@ -24,31 +23,38 @@ public class Joueur {
     //couleurs pour l'affichage des routes,colonies... du joueur
     
     public static final String RESET = "\u001B[0m";
-    public static final String BLACK = "\u001B[30m";
+    public static final String BLUE = "\033[0;34m";
     public static final String RED = "\u001B[31m";
     public static final String GREEN = "\u001B[32m";
-    public static final String YELLOW = "\u001B[33m";
-    public static final String BLUE = "\u001B[34m";
-    public static final String PURPLE = "\u001B[35m";
-    public static final String CYAN = "\u001B[36m";
-    public static final String WHITE = "\u001B[37m";
+
+    public static final String[] COLORS = {RESET,BLUE,RED,GREEN};
+
+
+
+
+
+
+
+    
     
     public Joueur(){
         name="Anonyme";
         this.type="IA";
-        armeeLaPlusPuissante=false;
-        routeLaPlusLongue=false;
-        scanReponse=new Scanner(System.in);
-        route='*';
-        colonie=RED+"C"+ RESET;
-        ville=RED+"V"+ RESET ;
         deck=new ArrayList<>();
         ArrayList<Carte> CarteDeveloppement=new ArrayList<Carte>();
         ArrayList<Carte> CarteRessource=new ArrayList<Carte>();
         deck.add(CarteDeveloppement);
         deck.add(CarteRessource);
-        nbreChevalierJouer=0;
-       
+    }
+
+    public Joueur(String nom){
+        name = nom;
+        type = "humain";
+        deck=new ArrayList<>();
+        ArrayList<Carte> CarteDeveloppement=new ArrayList<Carte>();
+        ArrayList<Carte> CarteRessource=new ArrayList<Carte>();
+        deck.add(CarteDeveloppement);
+        deck.add(CarteRessource);
     }
 
 
@@ -59,7 +65,7 @@ public class Joueur {
     public void setNbreChevalierJouer() {
         nbreChevalierJouer +=1;
     }
-    public char getRoute() {
+    public String getRoute() {
        return route;
     }
     
@@ -78,6 +84,19 @@ public class Joueur {
     public void setDesLances(boolean desLances) {
         this.desLances = desLances;
     }
+
+    public static void initialiseJoueurs(ArrayList<Joueur> joueurs){
+        for (int i = 0; i < 3; i++) {
+            joueurs.add(new Joueur(demanderNom()));
+        }
+        for (int i = 0; i < joueurs.size(); i++) {
+            joueurs.get(i).setRoute(COLORS[i+1] + "*" + COLORS[0]);
+            joueurs.get(i).setColonie(COLORS[i+1] + "C" + COLORS[0]);
+            joueurs.get(i).setVille(COLORS[i+1] + "V" + COLORS[0]);
+        }
+    }
+
+    
 
     
 
@@ -105,7 +124,7 @@ public class Joueur {
         this.ville = ville;
     }
 
-    public void setRoute(char route) {
+    public void setRoute(String route) {
         this.route = route;
     }
 
@@ -146,7 +165,7 @@ public class Joueur {
     public void finish(){
         scanReponse.close();
     }
-    public String demanderStr(String q){
+    public static String demanderStr(String q){
         System.out.println(q);
         return scanReponse.next();
     }
@@ -159,9 +178,9 @@ public class Joueur {
         return scanReponse.next().charAt(0);
     }
     public boolean veutJouer(){
-        return (demanderStr("Voulez vous effectuer une autre action? (oui/non)").equalsIgnoreCase("oui"));
+        return (demanderStr("Voulez vous jouer? (oui/non)").equalsIgnoreCase("oui"));
     }
-    public String demanderNom(){
+    public static String demanderNom(){
         return demanderStr("Donnez votre nom");
     }
     public int demanderDim(){
@@ -173,6 +192,26 @@ public class Joueur {
         int j=r.nextInt(6)+1;
         return i+j;
     }
+
+    public int[] getDimension(String str){ 
+        String hauteur="";
+        String largeur="";
+        int[] dim = new int[2];
+        for (int i = 0; i < str.indexOf("x"); i++) {
+            if(Character.isDigit(str.charAt(i))){
+                hauteur+=str.charAt(i);
+            }
+        }
+        int midindex = str.toLowerCase().indexOf("x"); // On repère l'index du "x" dans la réponse de l'utilisateur de la forme largeurXhauteur
+        for (int i = midindex+1; i < str.length(); i++) {
+                largeur+=str.charAt(i);
+            }
+        dim[0] = Integer.parseInt(hauteur);
+        dim[1] = Integer.parseInt(largeur);
+        return dim;
+        
+    }
+
     public int demanderAction(){
         System.out.println("Veuillez saisir le numéro correspondant à l'action que vous voulez effectuer");
         System.out.println("(1) Lancer les dès");
@@ -194,30 +233,19 @@ public class Joueur {
             coordonnees = demanderStr("Veuillez saisir des coordonnees valides pour un batiment. Rappel du format : (Ligne.Colonne : Exemple : AA ou CC)");
         } 
         coord[0] = alphabetI.indexOf(coordonnees.charAt(0)); 
-        coord[1] = alphabetI.indexOf(coordonnees.charAt(0)); 
+        coord[1] = alphabetI.indexOf(coordonnees.charAt(1)); 
         return coord;
     }
 
-    public String demanderCoordonneesRoute(){
-        return  demanderStr("Saisir les coordonnées d'une route (Ligne.Colonne : Exemple : AB ou BA ou bien FC )");
-    }
 
-    public boolean coordonneesRouteValides(String coord){
-        return (coord.charAt(0)%2==0 && coord.charAt(1)%2==0
-            ||coord.charAt(1)%2==0 && coord.charAt(0)%2==0
-        );
-    }
     //renvoie les coordonné d'une route en fonction qu'elle soit verticale ou horizontale
     //sortie :[abs dans routesV ou routesH][ord dans routesV ou routesH][nbr qui indique si c'est routesV ou routesH "ex: 1 pour routesV et 0 pr routesH"]
-    public int [] demanderCordonneesRoute(){
-        String coordonnees=demanderStr("Saisir les coordonnées d'une case (Ligne.Colonne)");
+    public int [] demanderCoordonneesRoute(){
+        String coordonnees = demanderStr("Saisir les coordonnées d'une route (Ligne.Colonne : Exemple : AB ou BA ou bien FC )");
         int[] coord = new int[3];
-        while(!coordonneesRouteValides(coordonnees)){
-            coordonnees = demanderStr("Veuillez rentrer des coordonnees valides");
-        }
         coord[0] =(Plateau.alphabet.indexOf(coordonnees.charAt(0))%2==0) ? alphabetP.indexOf(coordonnees.charAt(0)) : alphabetI.indexOf(coordonnees.charAt(0)); 
         coord[1] = (Plateau.alphabet.indexOf(coordonnees.charAt(1))%2==0) ? alphabetP.indexOf(coordonnees.charAt(1)) : alphabetI.indexOf(coordonnees.charAt(1));
-        coord[2] = (coord[0] % 2 == 0) ? 1 : 0 ; // si coord[0] est pair, i.e si c'est une route verticale qu'on pose, alors on mets comme code le chiffre 0 (comme 0 modulo 2...). Autrement on mets 1 (route horizontale)
+        coord[2] = (Plateau.alphabet.indexOf(coordonnees.charAt(0))%2==0) ? 0 : 1 ; // si coord[0] est pair, i.e si c'est une route verticale qu'on pose, alors on mets comme code le chiffre 0 (comme 0 modulo 2...). Autrement on mets 1 (route horizontale)
         return coord;
     }
     public int [] demandeCoordonneesVoleur(){
@@ -226,11 +254,6 @@ public class Joueur {
         coord[0] = alphabetP.indexOf(coordonnees.charAt(0)); 
         coord[1]=alphabetP.indexOf(coordonnees.charAt(1));
         return coord;
-    }
- 
-
-    public int demandeNbJoueurs(){
-        return demanderInt("Bienvenue ! Combien de joueurs vont-ils participer ?");
     }
 
     public void ajouteCarteRessoure(Carte c){
@@ -333,10 +356,10 @@ public class Joueur {
         }
         return false;
     }
-    public void perdrecarte(Joueur [] tab){
-        for(int i=0;i<tab.length;i++){
-            if(tab[i].deck.get(1).size()>7){
-                int n=(tab[i].deck.get(1).size())/2;
+    public void perdrecarte(ArrayList<Joueur> participants){
+        for(int i=0;i<participants.size();i++){
+            if(participants.get(i).deck.get(1).size()>7){
+                int n=(participants.get(i).deck.get(1).size())/2;
                 while(n>0){
                     String st=demanderStr("Donnez le nom de la carte que vous voulez laisser au voleur");
                     Carte c=new Carte(st.toLowerCase());
@@ -348,12 +371,12 @@ public class Joueur {
             }
         }
     }
-    public void monopole(Carte c, Joueur [] tab){
-        for(int i=0;i<tab.length;i++){
-            if(!tab[i].getName().equals(this.name) && tab[i].cartePresent(c)){
-                for(int j=0;j<tab[i].deck.get(1).size();i++){
+    public void monopole(Carte c, ArrayList<Joueur> participants){
+        for(int i=0;i<participants.size();i++){
+            if(!participants.get(i).getName().equals(this.name) && participants.get(i).cartePresent(c)){
+                for(int j=0;j<participants.get(i).deck.get(1).size();i++){
                     this.ajouteCarteRessoure(c);
-                    tab[i].suprimerCarte(c, 1);
+                    participants.get(i).suprimerCarte(c, 1);
                 }
             }
         }
@@ -396,21 +419,21 @@ public class Joueur {
         }
         return n;
     }
-    //verifier qu'aucun joueur ne dispose de l'étiquette Armée la plus puissante
-    public boolean ArmePPuissante(Joueur [] tab ){
-        for( int i=0;i<tab.length;i++){
-            if(tab[i].armeeLaPlusPuissante){
+    //Verifier qu'aucun joueur ne dispose de l'étiquette Armée la plus puissante
+    public boolean ArmePPuissante(ArrayList<Joueur> tab ){
+        for( int i=0;i<tab.size();i++){
+            if(tab.get(i).armeeLaPlusPuissante){
                 return true;
             }
         }
         return false;
     }
     //affecte l'étiquette de l'armé la plus puissante au premier joueur qui a 3 carte chevalier
-    public void armeeLaplusPuissante(Joueur [] tab ){
-        if(!ArmePPuissante(tab)){
-            for( int i=0;i<tab.length;i++){
-                if(tab[i].nombrechevalier()>=3){
-                    tab[i].armeeLaPlusPuissante=true;
+    public void armeeLaplusPuissante(ArrayList<Joueur> participants ){
+        if(!ArmePPuissante(participants)){
+            for( int i=0;i<participants.size();i++){
+                if(participants.get(i).nombrechevalier()>=3){
+                    participants.get(i).armeeLaPlusPuissante=true;
                     nbpoints+=2;
                     return ;
                 }

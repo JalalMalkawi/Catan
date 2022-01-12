@@ -1,4 +1,7 @@
+import java.util.ArrayList;
 import java.util.Random;
+
+import javax.print.attribute.standard.JobOriginatingUserName;
 
 public class Plateau {
     private int dimension;// dimension du plateau
@@ -7,8 +10,7 @@ public class Plateau {
     private Route[][] routesH; // routes Horizontales
     private Batiment[][] batiments; // les colonies et les villes
     public static String alphabet = "-ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private Joueur[] joueurs; // TODO: Trouver une solution pour ne pas avoir deux joueurs identiques (ayant
-                              // le même nom), exemple : utiliser un Set
+    private ArrayList<Joueur> joueurs; 
 
     // --------------- constructeur et fonctions auxiliaires du constructeur,
     // affichage----------------------//
@@ -22,7 +24,7 @@ public class Plateau {
                                                            // de "vérification" comme peutConstruire()
         routesH = new Route[dimension + 1][dimension + 2]; // deux routes horizontales de plus aux extrémités des lignes
                                                            // pour la même raison qu'au dessus
-        joueurs = new Joueur[nbrjoueur];
+        joueurs = new ArrayList<>();
         initialiseBatiments();
         initialiseRoutes(routesH);
         initialiseRoutes(routesV);
@@ -30,7 +32,7 @@ public class Plateau {
         initialiseTuiles();
         terrainsEtNumerosAlea();
     }
-    public Joueur[] getJoueurs() {
+    public ArrayList<Joueur> getJoueurs() {
         return joueurs;
     }
     public Batiment[][] getBatiments() {
@@ -49,6 +51,11 @@ public class Plateau {
         return routesH;
     }
 
+    public void setJoueurs(ArrayList<Joueur> joueurs) {
+        this.joueurs = joueurs;
+    }
+
+
     public void initialiseRoutes(Route[][] tab) {
         for (int i = 0; i < tab.length; i++) {
             for (int j = 0; j < tab[i].length; j++) {
@@ -66,8 +73,8 @@ public class Plateau {
     }
 
     public void initialiseJoueur() {
-        for (int i = 0; i < joueurs.length; i++) {
-            joueurs[i] = new Joueur();
+        for (int i = 0; i < joueurs.size(); i++) {
+            joueurs.add(new Joueur());
         }
     }
 
@@ -177,6 +184,7 @@ public class Plateau {
     }
 
     public void ajouteVille(int x, int y, Joueur proprietaire) {
+
         if (peutConstruireVille(x, y, proprietaire)) {
             batiments[x][y] = new Ville(x, y, proprietaire);
             proprietaire.ajoutePoints(2);
@@ -201,8 +209,8 @@ public class Plateau {
         return x > routesH.length - 1 || x < 0 || y > routesH[0].length - 1 || y < 1;
     }
 
-    public boolean routeHorsLimite(int x, int y) {
-        if (new Route(x, y).estRouteVerticale()) {
+    public boolean routeHorsLimite(int x , int y,int t) {
+        if (t==0) {
             return RouteVerticaleHorsLimite(x, y);
         }
         // si pas verticale : il reste alors juste à vérifier si elle rentre
@@ -290,11 +298,11 @@ public class Plateau {
 
     public boolean peutConstruireRoute(int x, int y,int t, Joueur j) { // t est un nombre "code" qui nous permets
                                                                         //de savoir si la route qu'on veut construire est verticale ou horizontale
-        if (routeHorsLimite(x, y))
+        if (routeHorsLimite(x,y,t))
             return false;
         if (routePresente(x, y))
             return false;
-
+        System.out.println("ok");
         if (t==1) {
             return (routeAmieAProximite_RH(x, y, j) || checkIfBatimentAmi(j, batiments[x+1][y], batiments[x+1][y+1]));
         }
@@ -347,9 +355,9 @@ public class Plateau {
     }
 
     public boolean jeuGagne() {
-        for (int i = 0; i < joueurs.length; i++) {
-            if (joueurs[i].getNbpoints() == 10) {
-                System.out.println(joueurs[i].getName() + " a gagné");
+        for (int i = 0; i < joueurs.size(); i++) {
+            if (joueurs.get(i).getNbpoints() == 10) {
+                System.out.println(joueurs.get(i).getName() + " a gagné");
                 return true;
             }
         }
@@ -392,7 +400,7 @@ public class Plateau {
     public void donneRessourcesTuile(int absTuile,int ordTuile){
         for (int k = absTuile; k <= absTuile+1; k++) { // On parcourt le carré de tuiles dans le tableau batiments[][] afin de distribuer les ressources aux joueurs installés aux intersections environnantes
             for (int l = ordTuile; l <= ordTuile+1; l++) {
-                if(batiments[k][l] != null) {
+                if(batiments[k][l].getProprietaire() != null) {
                     batiments[k][l].getProprietaire().ajouteCarteRessoure(tuiles[absTuile][ordTuile].getRessource());// une colonie fait gagner une seule carte
                     if (batiments[k][l] instanceof Ville) {
                         batiments[k][l].getProprietaire().ajouteCarteRessoure(tuiles[absTuile][ordTuile].getRessource());// une ville fait gagner une deuxième carte
@@ -416,12 +424,13 @@ public class Plateau {
         }
     }
     public boolean joueurPresent(String n){
-        for(int i=0;i<joueurs.length;i++){
-            if(joueurs[i].getName().equalsIgnoreCase(n)){
+        for(int i=0;i<joueurs.size();i++){
+            if(joueurs.get(i).getName().equalsIgnoreCase(n)){
                 return true;
             }
         }
         return false;
     }
    
+    
 }
